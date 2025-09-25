@@ -15,13 +15,9 @@ class RegisterPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 162, 206, 233), // vibrant purple
-              Color(0xff013BFF), // vibrant blue
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          image: DecorationImage(
+            image: AssetImage("assets/images/bg1.png"),
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(
@@ -54,8 +50,8 @@ class RegisterPage extends StatelessWidget {
                         "Create Account ✨",
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff6D94C5),
                             ),
                         textAlign: TextAlign.center,
                       ),
@@ -82,8 +78,12 @@ class RegisterPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
+                              side: const BorderSide(
+                                color: Color(0xff6D94C5),
+                                width: 1,
+                              ),
                             ),
-                            elevation: 6,
+                            elevation: 0,
                           ),
                           onPressed: () {
                             Navigator.push(
@@ -97,7 +97,8 @@ class RegisterPage extends StatelessWidget {
                             "Register",
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff6D94C5),
                             ),
                           ),
                         ),
@@ -128,8 +129,8 @@ class RegisterPage extends StatelessWidget {
                         onTap: () => Navigator.pop(context),
                         child: RichText(
                           text: const TextSpan(
-                            text: "Already have an account? ",
-                            style: TextStyle(color: Colors.white70),
+                            text: "Sudah punya akun? ", 
+                            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
                                 text: "Login",
@@ -161,16 +162,16 @@ class RegisterPage extends StatelessWidget {
   }) {
     return TextField(
       obscureText: obscure,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Color(0xff6D94C5)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: Colors.white),
+        hintStyle: const TextStyle(color: Color(0xff6D94C5)),
+        prefixIcon: Icon(icon, color: Color(0xff6D94C5)),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: Colors.white),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),

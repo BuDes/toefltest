@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:toeflapp/pages/auth/login_page.dart';
+import 'package:toeflapp/pages/edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -10,29 +11,16 @@ class ProfilePage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5EFE6), // 🌿 warna background global
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ).createShader(bounds),
-          child: const Text(
-            "Profile 👤",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white, // dummy, ketimpa shader
-            ),
-          ),
-        ),
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 100, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 60, 16, 24),
         children: [
           // 🔹 Header User
           Row(
@@ -41,7 +29,7 @@ class ProfilePage extends StatelessWidget {
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                    colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -54,15 +42,59 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "John Doe",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                children: [
+                  ShaderMask(
+                    // The gradient is applied to the child widget
+                    shaderCallback: (Rect bounds) {
+                      return const LinearGradient(
+                        colors: [
+                          Color(0xFF6D94C5), // Starting color
+                          Color(0xffffa97a), // Ending color
+                          // You can add more colors to the list
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ).createShader(bounds);
+                    },
+                    child: const Text(
+                      "User Name",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors
+                            .white, // The color here doesn't matter, but it's good practice to set it to a solid color like white to avoid rendering issues.
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    "johndoe@email.com",
+                  const SizedBox(height: 4),
+                  const Text(
+                    "userexample@email.com",
                     style: TextStyle(color: Colors.black54),
+                  ),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const EditProfilePage(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Iconsax.edit, size: 16, color: Color(0xFF6D94C5)),
+                        SizedBox(width: 6),
+                        Text(
+                          "Edit Profile",
+                          style: TextStyle(
+                            color: Color(0xFF6D94C5),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -72,7 +104,13 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 24),
 
           // 🔹 Progress Section
-          Text("Progress", style: theme.textTheme.titleMedium),
+          Text(
+            "Progress",
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: const Color(0xFF6D94C5),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -85,7 +123,13 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 16),
 
           // 🔹 History Section
-          Text("Riwayat", style: theme.textTheme.titleMedium),
+          Text(
+            "Riwayat",
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: const Color(0xFF6D94C5),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 12),
           _historyCard("Reading Test 1", "Score: 85", Iconsax.document_text),
           _historyCard("Listening Test 2", "Score: 90", Iconsax.headphone),
@@ -96,7 +140,7 @@ class ProfilePage extends StatelessWidget {
           // 🔹 Logout
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
+              backgroundColor: const Color(0xFF6D94C5), // 🎨 warna utama
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -126,11 +170,11 @@ class ProfilePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+          colors: [Color(0xFF6D94C5), Color(0xFFCBDCEB)], // 🎨 gradasi lembut
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -138,11 +182,15 @@ class ProfilePage extends StatelessWidget {
             offset: const Offset(0, 6),
           ),
         ],
+        border: Border.all(
+          color: const Color.fromARGB(255, 205, 228, 255),
+          width: 2,
+        ),
       ),
-      child: Column(
+      child: Row(
         children: [
           Icon(icon, color: Colors.white, size: 32),
-          const SizedBox(height: 8),
+          const SizedBox(width: 8),
           Text(
             value,
             style: const TextStyle(
@@ -151,6 +199,7 @@ class ProfilePage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(width: 8),
           Text(title, style: const TextStyle(color: Colors.white70)),
         ],
       ),
@@ -159,17 +208,24 @@ class ProfilePage extends StatelessWidget {
 
   Widget _historyCard(String title, String subtitle, IconData icon) {
     return Card(
+      color: const Color(0xFFE8DFCA), // 🌿 sesuai palet, bukan putih polos
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 2,
+      // elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: const Color(0xFFEFF3FF),
-          child: Icon(icon, color: const Color(0xFF2575FC)),
+          backgroundColor: const Color(0xFFCBDCEB),
+          child: Icon(icon, color: const Color(0xFF6D94C5)),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Iconsax.arrow_right_3),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+        subtitle: Text(subtitle, style: const TextStyle(color: Colors.black54)),
+        trailing: const Icon(Iconsax.arrow_right_3, color: Colors.black45),
         onTap: () {}, // TODO: lihat detail
       ),
     );
