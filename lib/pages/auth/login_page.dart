@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:toeflapp/main_page.dart';
+import 'package:toeflapp/widgets/botom_nav.dart';
 import 'package:toeflapp/pages/auth/register_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -101,7 +101,7 @@ class LoginPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const MainPage(),
+                                  builder: (_) => const BottomNav(),
                                 ),
                               );
                             },
@@ -129,7 +129,10 @@ class LoginPage extends StatelessWidget {
                           child: RichText(
                             text: const TextSpan(
                               text: "Belum punya akun? ",
-                              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w600,
+                              ),
                               children: [
                                 TextSpan(
                                   text: "Register",

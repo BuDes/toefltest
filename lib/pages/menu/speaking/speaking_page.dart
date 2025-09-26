@@ -2,7 +2,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toeflapp/models/section_model.dart';
-import 'package:toeflapp/pages/materials/practice_detail_page.dart';
+import 'package:toeflapp/pages/menu/practice_detail_page.dart';
 import 'package:toeflapp/widgets/section_card.dart';
 
 const Color primaryBlue = Color(0xff6D94C5);

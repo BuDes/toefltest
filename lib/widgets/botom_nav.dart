@@ -1,19 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:toeflapp/pages/chat_page.dart';
+import 'package:toeflapp/pages/chat/chat_page.dart';
 import 'package:toeflapp/pages/home_page.dart';
-import 'package:toeflapp/pages/profile_page.dart';
-import 'package:toeflapp/pages/test_page.dart';
+import 'package:toeflapp/pages/profile/profile_page.dart';
+import 'package:toeflapp/pages/test/test_page.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class BottomNav extends StatefulWidget {
+  const BottomNav({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<BottomNav> createState() => _BottomNavState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _BottomNavState extends State<BottomNav> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [

@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:toeflapp/pages/materials/listening/listening_page.dart';
-import 'package:toeflapp/pages/materials/full_practice_page.dart';
-import 'package:toeflapp/pages/materials/reading/reading_page.dart';
-import 'package:toeflapp/pages/materials/speaking/speaking_page.dart';
-import 'package:toeflapp/pages/materials/writing/writing_page.dart';
+import 'package:toeflapp/pages/menu/listening/listening_page.dart';
+import 'package:toeflapp/pages/menu/full_practice_page.dart';
+import 'package:toeflapp/pages/menu/reading/reading_page.dart';
+import 'package:toeflapp/pages/menu/speaking/speaking_page.dart';
+import 'package:toeflapp/pages/menu/writing/writing_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

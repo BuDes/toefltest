@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:toeflapp/pages/auth/login_page.dart';
-import 'package:toeflapp/pages/edit_profile.dart';
+import 'package:toeflapp/pages/profile/edit_profile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

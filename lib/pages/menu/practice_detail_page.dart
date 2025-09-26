@@ -1,10 +1,10 @@
 // lib/pages/practice_detail_page.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:toeflapp/pages/materials/listening/listening_practice_page.dart';
-import 'package:toeflapp/pages/materials/reading/reading_practice_page.dart';
-import 'package:toeflapp/pages/materials/speaking/speaking_practice_page.dart';
-import 'package:toeflapp/pages/materials/writing/writing_practice_page.dart';
+import 'package:toeflapp/pages/menu/listening/listening_practice_page.dart';
+import 'package:toeflapp/pages/menu/reading/reading_practice_page.dart';
+import 'package:toeflapp/pages/menu/speaking/speaking_practice_page.dart';
+import 'package:toeflapp/pages/menu/writing/writing_practice_page.dart';
 
 const Color primaryBlue = Color(0xff6D94C5);
 const Color cream1 = Color(0xffF5EFE6);
