@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:toeflapp/pages/chat/chat_page.dart';
 import 'package:toeflapp/pages/home_page.dart';
 import 'package:toeflapp/pages/profile/profile_page.dart';
-import 'package:toeflapp/pages/test/test_page.dart';
+import 'package:toeflapp/pages/online_test/test_page.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});

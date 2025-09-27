@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:toeflapp/pages/online_test/test_flow_pages.dart';
 
 class TestPage extends StatelessWidget {
   const TestPage({super.key});
@@ -40,9 +41,9 @@ class TestPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            _testTile("TOEFL Practice Test 1", "Available Anytime"),
-            _testTile("TOEFL Practice Test 2", "Available Anytime"),
-            _testTile("Mock Test - September", "Available 25 Sep 2025"),
+            _testTile(context, "TOEFL Practice Test 1", "Available Anytime"),
+            _testTile(context, "TOEFL Practice Test 2", "Available Anytime"),
+            _testTile(context, "Mock Test - September", "Available 25 Sep 2025"),
 
             const SizedBox(height: 32),
 
@@ -55,7 +56,6 @@ class TestPage extends StatelessWidget {
 
             _scheduleTile("Mock Test October", "10 Oct 2025", "10:00 AM"),
             _scheduleTile("Mock Test November", "15 Nov 2025", "02:00 PM"),
-            // _scheduleTile("Mock Test November", "15 Nov 2025", "02:00 PM"),
             const SizedBox(height: 56),
           ],
         ),
@@ -63,7 +63,7 @@ class TestPage extends StatelessWidget {
     );
   }
 
-  Widget _testTile(String title, String subtitle) {
+  Widget _testTile(BuildContext context, String title, String subtitle) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -110,7 +110,13 @@ class TestPage extends StatelessWidget {
           Iconsax.arrow_right_3,
           color: Color.fromARGB(137, 65, 116, 158),
         ),
-        onTap: () {}, // TODO: navigate ke detail test
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TestDetailPage(testTitle: title),
+            ),
+          );
+        },
       ),
     );
   }

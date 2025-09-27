@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toeflapp/pages/menu/listening/listening_page.dart';
-import 'package:toeflapp/pages/menu/full_practice_page.dart';
+import 'package:toeflapp/pages/practice/practice_page.dart';
 import 'package:toeflapp/pages/menu/reading/reading_page.dart';
 import 'package:toeflapp/pages/menu/speaking/speaking_page.dart';
 import 'package:toeflapp/pages/menu/writing/writing_page.dart';
@@ -122,7 +122,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 8),
                   InkWell(
                     borderRadius: BorderRadius.circular(20),
-                    onTap: () => _goTo(context, const FullPracticeTestPage()),
+                    onTap: () => _goTo(context, const PracticeTestPage()),
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
