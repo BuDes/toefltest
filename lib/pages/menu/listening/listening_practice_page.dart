@@ -1,10 +1,8 @@
-// lib/pages/practice_test_page.dart
-import 'dart:math';
+// lib/pages/menu/listening/listening_practice_page.dart
 import 'package:flutter/material.dart';
 
 const Color primaryBlue = Color(0xff6D94C5);
 const Color cream1 = Color(0xffF5EFE6);
-const Color cream2 = Color(0xffE8DFCA);
 
 class PracticeListeningPage extends StatefulWidget {
   final String practiceTitle;
@@ -15,11 +13,9 @@ class PracticeListeningPage extends StatefulWidget {
 }
 
 class _PracticeListeningPageState extends State<PracticeListeningPage> {
-  // simple mock for audio time
   double _audioProgress = 0.2;
   bool _playing = false;
 
-  // mock questions
   final List<_Question> _questions = [
     _Question(
       id: 1,
@@ -38,183 +34,142 @@ class _PracticeListeningPageState extends State<PracticeListeningPage> {
     ),
   ];
 
-  // selected answers (UI-only)
   final Map<int, int> _selected = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: cream1, // [DIUBAH] Background utama
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        elevation: 2,
         title: Text(
           widget.practiceTitle,
           style: const TextStyle(
-            color: Colors.black87,
+            color: primaryBlue,
             fontWeight: FontWeight.bold,
           ),
         ),
+        iconTheme: const IconThemeData(color: primaryBlue),
       ),
-      body: Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.rotationY(pi),
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/bg1.png"),
-              fit: BoxFit.cover,
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          const Text(
+            'Listening Comprehension',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: primaryBlue,
             ),
           ),
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(pi),
-            child: ListView(
-              padding: const EdgeInsets.all(20),
+          const SizedBox(height: 4),
+          const Text(
+            "Listen to the audio carefully and answer the questions that follow.",
+            style: TextStyle(color: Colors.black54, fontSize: 14),
+          ),
+          const SizedBox(height: 24),
+
+          // Audio player dalam kartu tersendiri
+          Container(
+            padding: const EdgeInsets.all(14),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Audio Recording',
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 12),
                 Row(
                   children: [
-                    const Text(
-                      'Question 1-5',
-                      style: TextStyle(color: Colors.black54),
+                    IconButton(
+                      onPressed: () => setState(() => _playing = !_playing),
+                      icon: Icon(
+                        _playing
+                            ? Icons.pause_circle_filled
+                            : Icons.play_circle_filled,
+                        size: 36,
+                        color: primaryBlue,
+                      ),
                     ),
-                    const SizedBox(width: 12),
+                    Text(
+                      _formatTime(_audioProgress * 4.36),
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
-                      child: Container(
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: FractionallySizedBox(
-                          widthFactor: 0.12,
-                          alignment: Alignment.centerLeft,
-                          child: Container(),
-                        ),
+                      child: Slider(
+                        value: _audioProgress,
+                        onChanged: (v) =>
+                            setState(() => _audioProgress = v.clamp(0.0, 1.0)),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.grid_view_rounded, size: 18),
-                    ),
+                    const Text('4:36', style: TextStyle(color: Colors.black54)),
                   ],
                 ),
-                const SizedBox(height: 18),
-
-                // audio player mock
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.02),
-                        blurRadius: 8,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Audio Recording',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () =>
-                                setState(() => _playing = !_playing),
-                            icon: Icon(
-                              _playing
-                                  ? Icons.pause_circle_filled
-                                  : Icons.play_circle_filled,
-                              size: 36,
-                              color: primaryBlue,
-                            ),
-                          ),
-                          Text(
-                            _formatTime(_audioProgress * 4.36),
-                            style: const TextStyle(color: Colors.black54),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Slider(
-                              value: _audioProgress,
-                              onChanged: (v) => setState(
-                                () => _audioProgress = v.clamp(0.0, 1.0),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '4:36',
-                            style: const TextStyle(color: Colors.black54),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // questions
-                ..._questions.map(
-                  (q) => _QuestionCard(
-                    question: q,
-                    selectedIndex: _selected[q.id],
-                    onSelect: (index) =>
-                        setState(() => _selected[q.id] = index),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // UI-only: show simple result
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: const Text('Submit (UI-only)'),
-                        content: Text(
-                          'You selected ${_selected.length} answers. This is UI only; backend integration later.',
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: const Text(
-                    'Submit answers',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffffa97a),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 60),
               ],
             ),
           ),
-        ),
+
+          // Soal-soal
+          ..._questions.map(
+            (q) => _QuestionCard(
+              question: q,
+              selectedIndex: _selected[q.id],
+              onSelect: (index) => setState(() => _selected[q.id] = index),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('Submit (UI-only)'),
+                  content: Text(
+                    'You selected ${_selected.length} answers. This is UI only; backend integration later.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryBlue,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Submit answers',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const SizedBox(height: 40),
+        ],
       ),
     );
   }
@@ -248,12 +203,16 @@ class _QuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: Column(
@@ -271,45 +230,44 @@ class _QuestionCard extends StatelessWidget {
             question.text,
             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           ...List.generate(question.options.length, (i) {
             final option = question.options[i];
-            final checked = selectedIndex == i;
+            final isSelected = selectedIndex == i;
             return InkWell(
               onTap: () => onSelect(i),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? primaryBlue.withOpacity(0.1)
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: isSelected ? primaryBlue : Colors.grey.shade300,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 22,
-                      height: 22,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: checked ? primaryBlue : Colors.grey.shade300,
-                          width: 2,
-                        ),
-                        color: checked
-                            ? primaryBlue.withOpacity(0.12)
-                            : Colors.transparent,
+                    Text(
+                      '${String.fromCharCode(65 + i)}.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? primaryBlue : Colors.black54,
                       ),
-                      child: checked
-                          ? const Icon(
-                              Icons.check,
-                              size: 14,
-                              color: primaryBlue,
-                            )
-                          : null,
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      '( ${String.fromCharCode(65 + i)} )',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    const SizedBox(width: 10),
                     Expanded(
-                      child: Text(option, style: const TextStyle(fontSize: 14)),
+                      child: Text(
+                        option,
+                        style: TextStyle(
+                          color: isSelected ? primaryBlue : Colors.black87,
+                        ),
+                      ),
                     ),
                   ],
                 ),

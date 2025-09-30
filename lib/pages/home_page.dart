@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toeflapp/pages/menu/listening/listening_page.dart';
 import 'package:toeflapp/pages/practice/practice_page.dart';
 import 'package:toeflapp/pages/menu/reading/reading_page.dart';
-import 'package:toeflapp/pages/menu/speaking/speaking_page.dart';
+import 'package:toeflapp/pages/menu/structure/structure_page.dart';
 import 'package:toeflapp/pages/menu/writing/writing_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -87,18 +87,6 @@ class HomePage extends StatelessWidget {
                       _menuCard(
                         context,
                         SvgPicture.asset(
-                          'assets/images/icon_person.svg',
-                          width: 35,
-                          height: 35,
-                          color: const Color(0xffffa97a),
-                        ),
-                        "Speaking",
-                        "50+ Topik",
-                        onTap: () => _goTo(context, const SpeakingPage()),
-                      ),
-                      _menuCard(
-                        context,
-                        SvgPicture.asset(
                           'assets/images/icon_pen.svg',
                           width: 35,
                           height: 35,
@@ -107,6 +95,18 @@ class HomePage extends StatelessWidget {
                         "Writing",
                         "100+ Sampel",
                         onTap: () => _goTo(context, const WritingPage()),
+                      ),
+                      _menuCard(
+                        context,
+                        SvgPicture.asset(
+                          'assets/images/icon_structure.svg',
+                          width: 35,
+                          height: 35,
+                          color: const Color(0xffffa97a),
+                        ),
+                        "Structure",
+                        "50+ Topik",
+                        onTap: () => _goTo(context, const StructurePage()),
                       ),
                     ],
                   ),
@@ -193,10 +193,7 @@ class HomePage extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 20),
                       children: [
                         const SizedBox(height: 8),
-                        _progressTile("Speaking", 0.6, [
-                          Color(0xffffa97a),
-                          Color(0xffF5EFE6),
-                        ]),
+
                         _progressTile("Reading", 0.3, [
                           Color(0xffffa97a),
                           Color(0xffF5EFE6),
@@ -206,6 +203,10 @@ class HomePage extends StatelessWidget {
                           Color(0xffF5EFE6),
                         ]),
                         _progressTile("Writing", 0.4, [
+                          Color(0xffffa97a),
+                          Color(0xffF5EFE6),
+                        ]),
+                        _progressTile("Structure", 0.6, [
                           Color(0xffffa97a),
                           Color(0xffF5EFE6),
                         ]),

@@ -1,4 +1,3 @@
-// lib/pages/speaking_page.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toeflapp/models/section_model.dart';
@@ -8,54 +7,40 @@ import 'package:toeflapp/widgets/section_card.dart';
 const Color primaryBlue = Color(0xff6D94C5);
 const Color cream1 = Color(0xffF5EFE6);
 
-class SpeakingPage extends StatelessWidget {
-  const SpeakingPage({super.key});
+class StructurePage extends StatelessWidget {
+  const StructurePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Data dummy yang relevan untuk section Structure
     final List<SectionData> sections = [
       SectionData(
-        title: "Personal Topics",
-        icon: Icons.person,
-        totalTests: 3,
-        percentCorrect: 0,
+        title: 'Sentence Completion',
+        icon: Icons.edit_note,
+        totalTests: 25,
+        percentCorrect: 0.75, // contoh progress
         practices: List.generate(
-          3,
+          5,
           (i) => PracticeData(
-            id: i + 400,
-            title: "Task ${i + 1}",
+            id: i + 201,
+            title: 'Practice ${i + 1}',
             percentCorrect: 0,
             isNew: i < 2,
           ),
         ),
       ),
       SectionData(
-        title: "Opinion Topics",
-        icon: Icons.chat_bubble,
-        totalTests: 3,
-        percentCorrect: 0,
+        title: 'Error Identification',
+        icon: Icons.error_outline,
+        totalTests: 25,
+        percentCorrect: 0.40, // contoh progress
         practices: List.generate(
-          3,
+          4,
           (i) => PracticeData(
-            id: i + 500,
-            title: "Task ${i + 1}",
+            id: i + 251,
+            title: 'Practice ${i + 1}',
             percentCorrect: 0,
-            isNew: i == 0,
-          ),
-        ),
-      ),
-      SectionData(
-        title: "Academic Topics",
-        icon: Icons.school,
-        totalTests: 3,
-        percentCorrect: 0,
-        practices: List.generate(
-          3,
-          (i) => PracticeData(
-            id: i + 600,
-            title: "Task ${i + 1}",
-            percentCorrect: 0,
-            isNew: false,
+            isNew: i < 1,
           ),
         ),
       ),
@@ -67,7 +52,7 @@ class SpeakingPage extends StatelessWidget {
         backgroundColor: primaryBlue,
         elevation: 2,
         title: const Text(
-          "Speaking",
+          "Structure",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -90,7 +75,7 @@ class SpeakingPage extends StatelessWidget {
               child: ListView(
                 children: [
                   const Text(
-                    "Choose a speaking task",
+                    'Choose a section to start',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
@@ -98,6 +83,7 @@ class SpeakingPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  // Render sections
                   ...sections.map(
                     (s) => SectionCard(
                       data: s,
@@ -114,6 +100,7 @@ class SpeakingPage extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),

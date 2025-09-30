@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toeflapp/pages/menu/listening/listening_practice_page.dart';
 import 'package:toeflapp/pages/menu/reading/reading_practice_page.dart';
-import 'package:toeflapp/pages/menu/speaking/speaking_practice_page.dart';
+import 'package:toeflapp/pages/menu/structure/structure_detail_page.dart';
 import 'package:toeflapp/pages/menu/writing/writing_practice_page.dart';
 
 const Color primaryBlue = Color(0xff6D94C5);
@@ -153,13 +153,17 @@ class PracticeDetailPage extends StatelessWidget {
                                     WritingPracticePage(practice: practice),
                               ),
                             );
-                          } else if (sectionTitle.contains("Topics")) {
-                            // Speaking
+                          } else if (sectionTitle == 'Sentence Completion' ||
+                              sectionTitle == 'Error Identification') {
+                            // Structure
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) =>
-                                    SpeakingPracticePage(practice: practice),
+                                // [DIUBAH] Mengirim sectionTitle yang benar
+                                builder: (_) => StructurePracticePage(
+                                  practice: practice,
+                                  sectionTitle: sectionTitle,
+                                ),
                               ),
                             );
                           } else {

@@ -48,7 +48,7 @@ class PracticeTestPage extends StatelessWidget {
                 _testCard(
                   context,
                   title: "Practice Test",
-                  subtitle: "4 Bagian: Listening, Reading, Speaking, Writing",
+                  subtitle: "4 Bagian: Listening, Reading, Writing, & Structure",
                   icon: Icons.assignment,
                   onTap: () {
                     Navigator.push(

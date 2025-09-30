@@ -18,7 +18,6 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
   int _currentSection = 0;
   int _currentQuestion = 0;
   bool _isPlayingAudio = false;
-  bool _isRecording = false;
 
   // User answers disimpan di sini
   final Map<String, dynamic> _userAnswers = {};
@@ -69,13 +68,28 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
       ],
     },
     {
-      "title": "Speaking",
+      "title": "Structure",
       "questions": [
         {
+          "question": "📝 The committee has met and _______.",
+          "options": [
+            "they reached a decision",
+            "it has reached a decision",
+            "its decision was reached",
+            "it reached a decision",
+          ],
+          "answer": 1,
+        },
+        {
           "question":
-              "🎤 Describe your favorite holiday and why it is special to you.",
-          "options": [],
-          "answer": null,
+              "📝 Not until a student has mastered algebra _______ the principles of geometry.",
+          "options": [
+            "he can begin to understand",
+            "can he begin to understand",
+            "he begins to understand",
+            "begins to understand",
+          ],
+          "answer": 1,
         },
       ],
     },
@@ -131,7 +145,7 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
         GradientBorderContainer(
           child: const Text(
             "Latihan ini meniru ujian TOEFL yang sesungguhnya.\n\n"
-            "Materi test tediri dari beberapa bagian: Listening, Reading, Speaking, Writing.\n"
+            "Materi test tediri dari beberapa bagian: Listening, Reading, Writing, & Structure.\n"
             "Pastikan kamu berada di tempat yang tenang dan memiliki waktu yang cukup.",
             style: TextStyle(fontSize: 14, height: 1.5),
           ),
@@ -200,7 +214,7 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
         // 🔹 Content per Section
         if (section["title"] == "Listening") _buildListening(question),
         if (section["title"] == "Reading") _buildReading(section, question),
-        if (section["title"] == "Speaking") _buildSpeaking(question),
+        if (section["title"] == "Structure") _buildStructure(question),
         if (section["title"] == "Writing") _buildWriting(question),
 
         const SizedBox(height: 28),
@@ -299,29 +313,28 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
     );
   }
 
-  /// 🔹 Speaking Section
-  Widget _buildSpeaking(Map<String, dynamic> question) {
+  /// 🔹 structure Section
+  Widget _buildStructure(Map<String, dynamic> question) {
     return GradientBorderContainer(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             question["question"],
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
-          const SizedBox(height: 20),
-          IconButton(
-            icon: Icon(
-              _isRecording ? Icons.mic : Icons.mic_none,
-              size: 40,
-              color: _isRecording ? Colors.red : primaryBlue,
-            ),
-            onPressed: () => setState(() => _isRecording = !_isRecording),
-          ),
-          Text(
-            _isRecording ? "Recording..." : "Tap to Record",
-            style: const TextStyle(color: Colors.black54),
-          ),
+          const SizedBox(height: 12),
+          ...List.generate(question["options"].length, (i) {
+            return RadioListTile(
+              value: i,
+              groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
+              onChanged: (val) => setState(
+                () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
+              ),
+              title: Text(question["options"][i]),
+              activeColor: primaryBlue,
+            );
+          }),
         ],
       ),
     );

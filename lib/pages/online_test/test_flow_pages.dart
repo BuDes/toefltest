@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+// --- Reusable Widgets (Tidak ada perubahan di sini) ---
 class AppIcon extends StatelessWidget {
   final IconData icon;
   final Color backgroundColor;
@@ -56,7 +57,7 @@ class SectionHeader extends StatelessWidget {
 }
 
 // --- MOCK DATA ---
-enum TestSection { reading, listening, writing, speaking }
+enum TestSection { reading, listening, writing, structure }
 
 class Question {
   final String id;
@@ -121,13 +122,29 @@ class MockData {
         correctAnswerIndex: -1,
       ),
     ],
-    TestSection.speaking: [
+    TestSection.structure: [
       Question(
-        id: 's_1',
+        id: 'st_1',
+        text: 'The committee has met and _______.',
+        options: [
+          'they reached a decision',
+          'it has reached a decision',
+          'its decision was reached',
+          'it reached a decision',
+        ],
+        correctAnswerIndex: 1,
+      ),
+      Question(
+        id: 'st_2',
         text:
-            'Describe your hometown. What do you like most and least about it?',
-        options: [],
-        correctAnswerIndex: -1,
+            'Not until a student has mastered algebra _______ the principles of geometry.',
+        options: [
+          'he can begin to understand',
+          'can he begin to understand',
+          'he begins to understand',
+          'begins to understand',
+        ],
+        correctAnswerIndex: 1,
       ),
     ],
   };
@@ -147,7 +164,7 @@ class TestDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           testTitle,
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xff6D94C5),
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -176,7 +193,7 @@ class TestDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SectionHeader(
+                  const SectionHeader(
                     title: "Test Details",
                     icon: Iconsax.document_text5,
                   ),
@@ -194,10 +211,10 @@ class TestDetailPage extends StatelessWidget {
                   _buildDetailRow(
                     Iconsax.document,
                     "Format",
-                    "Reading, Listening, Writing, Speaking",
+                    "Reading, Listening, Writing, Structure",
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     "This practice test is designed to simulate the real TOEFL exam. It covers all four key sections and helps you familiarize yourself with the format, timing, and question types. It's an excellent tool for self-assessment.",
                     style: TextStyle(
                       fontSize: 14,
@@ -210,7 +227,6 @@ class TestDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             // Start Test Button
-            // ✅ Corrected code for the gradient button
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
@@ -300,7 +316,7 @@ class TestPreparationPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF5EFE6),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Get Ready!",
           style: TextStyle(
             color: Color(0xff6D94C5),
@@ -320,7 +336,7 @@ class TestPreparationPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "Important things to check before you start the test.",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -338,9 +354,9 @@ class TestPreparationPage extends StatelessWidget {
             ),
             _buildPreparationItem(
               icon: Iconsax.headphone,
-              title: "Headphones and Microphone",
+              title: "Headphones Required",
               description:
-                  "Make sure your headphones and microphone are working properly for the Listening and Speaking sections.",
+                  "Make sure your headphones are working properly for the Listening section.",
             ),
             _buildPreparationItem(
               icon: Iconsax.document_1,
@@ -366,7 +382,6 @@ class TestPreparationPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  // elevation: 5,
                 ),
                 child: const Text(
                   "I'm Ready, Start Test Now!",
@@ -452,22 +467,23 @@ class TestPageContainer extends StatefulWidget {
 class _TestPageContainerState extends State<TestPageContainer> {
   final PageController _pageController = PageController();
   int _currentSectionIndex = 0;
+  // [DIUBAH] List section diperbarui
   final List<TestSection> _sections = [
     TestSection.reading,
     TestSection.listening,
     TestSection.writing,
-    TestSection.speaking,
+    TestSection.structure,
   ];
 
   late Timer _timer;
-  int _start = 900; // 15 minutes in seconds for a single section
+  int _start = 900;
 
-  // Timer duration for each section
+  // [DIUBAH] Durasi section diperbarui
   final Map<TestSection, int> _sectionDurations = {
     TestSection.reading: 900, // 15 minutes
     TestSection.listening: 900, // 15 minutes
     TestSection.writing: 1200, // 20 minutes
-    TestSection.speaking: 180, // 3 minutes
+    TestSection.structure: 900, // 15 minutes
   };
 
   @override
@@ -509,6 +525,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
+  // [DIUBAH] Judul section diperbarui
   String _getSectionTitle(TestSection section) {
     switch (section) {
       case TestSection.reading:
@@ -517,8 +534,8 @@ class _TestPageContainerState extends State<TestPageContainer> {
         return "Listening Section";
       case TestSection.writing:
         return "Writing Section";
-      case TestSection.speaking:
-        return "Speaking Section";
+      case TestSection.structure:
+        return "Structure Section";
     }
   }
 
@@ -529,7 +546,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
       appBar: AppBar(
         title: Text(
           widget.testTitle,
-          style: TextStyle(color: Color(0xff6D94C5)),
+          style: const TextStyle(color: Color(0xff6D94C5)),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -547,7 +564,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
                 const SizedBox(width: 4),
                 Text(
                   _formatTime(_start),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xff6D94C5),
                     fontWeight: FontWeight.bold,
                   ),
@@ -572,7 +589,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
                 return Expanded(
                   child: Container(
                     height: 8,
-                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: isCompleted
@@ -648,11 +665,11 @@ class _TestPageContainerState extends State<TestPageContainer> {
             borderRadius: BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xffF5EFE6),
-          title: Text(
+          title: const Text(
             "Test Selesai!",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: const Color(0xff6D94C5),
+              color: Color(0xff6D94C5),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -664,10 +681,10 @@ class _TestPageContainerState extends State<TestPageContainer> {
                 height: 80,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 "Selamat, Anda telah menyelesaikan test ini. Hasil akan tersedia di halaman profil Anda.",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14, color: Colors.black54),
+                style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
             ],
           ),
@@ -676,10 +693,11 @@ class _TestPageContainerState extends State<TestPageContainer> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Go back to TestPage
+                Navigator.of(context).pop(); // Go back from TestPageContainer
+                Navigator.of(context).pop(); // Go back from TestDetailPage
               },
               child: const Text(
-                "Kembali ke Halaman Utama",
+                "Kembali ke Daftar Test",
                 style: TextStyle(
                   color: Color(0xffffa97a),
                   fontWeight: FontWeight.bold,
@@ -693,7 +711,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
   }
 }
 
-// --- INDIVIDUAL TEST SECTIONS WIDGETS ---
 // --- INDIVIDUAL TEST SECTIONS WIDGETS ---
 
 class TestSectionWidget extends StatefulWidget {
@@ -711,7 +728,7 @@ class TestSectionWidget extends StatefulWidget {
 }
 
 class _TestSectionWidgetState extends State<TestSectionWidget> {
-  Map<String, int?> _selectedAnswers =
+  final Map<String, int?> _selectedAnswers =
       {}; // Map to hold selected answer index for each question
 
   // --- State for Listening Section ---
@@ -720,21 +737,13 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
   final Duration _audioDuration = const Duration(minutes: 2, seconds: 40);
   Duration _audioPosition = Duration.zero;
 
-  // --- State for Speaking Section ---
-  bool _isRecording = false;
-  Timer? _recordingTimer;
-  final Duration _recordingDuration = const Duration(minutes: 1);
-  Duration _recordingPosition = Duration.zero;
-
   @override
   void dispose() {
-    // Cancel any active timers when the widget is removed to prevent memory leaks
     _audioTimer?.cancel();
-    _recordingTimer?.cancel();
+    // _recordingTimer?.cancel(); // Dihapus
     super.dispose();
   }
 
-  // --- Helper function to format Duration into MM:SS string ---
   String _formatDuration(Duration d) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(d.inMinutes.remainder(60));
@@ -742,12 +751,10 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     return '$minutes:$seconds';
   }
 
-  // --- Logic for Listening Section Player ---
   void _toggleAudioPlayback() {
     if (_isPlaying) {
       _audioTimer?.cancel();
     } else {
-      // Reset position if it has reached the end
       if (_audioPosition >= _audioDuration) {
         _audioPosition = Duration.zero;
       }
@@ -769,32 +776,8 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     });
   }
 
-  // --- Logic for Speaking Section Recorder ---
-  void _toggleRecording() {
-    if (_isRecording) {
-      _recordingTimer?.cancel();
-    } else {
-      // Reset position if it has reached the end
-      if (_recordingPosition >= _recordingDuration) {
-        _recordingPosition = Duration.zero;
-      }
-      _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_recordingPosition >= _recordingDuration) {
-          timer.cancel();
-          setState(() {
-            _isRecording = false;
-          });
-        } else {
-          setState(() {
-            _recordingPosition += const Duration(seconds: 1);
-          });
-        }
-      });
-    }
-    setState(() {
-      _isRecording = !_isRecording;
-    });
-  }
+  // [DIHAPUS] Logic untuk recorder tidak lagi diperlukan
+  // void _toggleRecording() { ... }
 
   @override
   Widget build(BuildContext context) {
@@ -806,7 +789,8 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           if (widget.section == TestSection.reading) _buildReadingSection(),
           if (widget.section == TestSection.listening) _buildListeningSection(),
           if (widget.section == TestSection.writing) _buildWritingSection(),
-          if (widget.section == TestSection.speaking) _buildSpeakingSection(),
+          // [DIUBAH] Memanggil widget untuk section Structure
+          if (widget.section == TestSection.structure) _buildStructureSection(),
           const SizedBox(height: 40),
           _buildNextButton(context),
         ],
@@ -819,10 +803,8 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Dummy passage for reading section
         _buildPassageCard(),
         const SizedBox(height: 24),
-        // Questions for the passage
         ...readingQuestions.asMap().entries.map((entry) {
           int index = entry.key;
           Question question = entry.value;
@@ -897,7 +879,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
                 ),
               ),
               const SizedBox(height: 16),
-              // ✅ Interactive Play/Pause Icon
               GestureDetector(
                 onTap: _toggleAudioPlayback,
                 child: Icon(
@@ -907,7 +888,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
                 ),
               ),
               const SizedBox(height: 8),
-              // ✅ Dynamic Timer Text
               Text(
                 "${_formatDuration(_audioPosition)} / ${_formatDuration(_audioDuration)}",
                 style: const TextStyle(fontSize: 12, color: Colors.black54),
@@ -951,63 +931,21 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     );
   }
 
-  Widget _buildSpeakingSection() {
-    final speakingQuestion = MockData.questions[TestSection.speaking]!.first;
+  // [DITAMBAHKAN] Widget untuk menampilkan soal Structure
+  Widget _buildStructureSection() {
+    final structureQuestions = MockData.questions[TestSection.structure]!;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildQuestionCard(speakingQuestion, 1),
-        const SizedBox(height: 24),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              // ✅ Interactive Record Icon
-              GestureDetector(
-                onTap: _toggleRecording,
-                child: Icon(
-                  Iconsax.microphone_2,
-                  size: 80,
-                  // Change color to indicate recording state
-                  color: _isRecording
-                      ? Colors.redAccent
-                      : const Color(0xffffa97a),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _isRecording
-                    ? "Recording..."
-                    : "Tap the mic to start recording.",
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Color(0xff6D94C5),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              // ✅ Dynamic Timer Text
-              Text(
-                "${_formatDuration(_recordingPosition)} / ${_formatDuration(_recordingDuration)}",
-                style: const TextStyle(fontSize: 12, color: Colors.black54),
-              ),
-            ],
-          ),
-        ),
+        ...structureQuestions.asMap().entries.map((entry) {
+          int index = entry.key;
+          Question question = entry.value;
+          return _buildQuestionCard(question, index + 1);
+        }).toList(),
       ],
     );
   }
+
 
   Widget _buildQuestionCard(Question question, int number) {
     return Container(
@@ -1098,7 +1036,8 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           ),
         ),
         child: Text(
-          widget.section == TestSection.speaking
+          // [DIUBAH] Kondisi untuk tombol Finish disesuaikan
+          widget.section == TestSection.structure
               ? "Finish Test"
               : "Next Section",
           style: const TextStyle(
