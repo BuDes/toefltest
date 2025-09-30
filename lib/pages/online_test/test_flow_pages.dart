@@ -56,7 +56,7 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-// --- MOCK DATA ---
+// --- MOCK DATA (Tidak ada perubahan) ---
 enum TestSection { reading, listening, writing, structure }
 
 class Question {
@@ -150,7 +150,7 @@ class MockData {
   };
 }
 
-// --- PAGES & WIDGETS ---
+// --- PAGES & WIDGETS (Tidak ada perubahan)---
 
 class TestDetailPage extends StatelessWidget {
   final String testTitle;
@@ -453,8 +453,7 @@ class TestPreparationPage extends StatelessWidget {
   }
 }
 
-// --- MAIN TEST CONTAINER ---
-
+// --- MAIN TEST CONTAINER (Tidak ada perubahan) ---
 class TestPageContainer extends StatefulWidget {
   final String testTitle;
 
@@ -467,7 +466,6 @@ class TestPageContainer extends StatefulWidget {
 class _TestPageContainerState extends State<TestPageContainer> {
   final PageController _pageController = PageController();
   int _currentSectionIndex = 0;
-  // [DIUBAH] List section diperbarui
   final List<TestSection> _sections = [
     TestSection.reading,
     TestSection.listening,
@@ -478,12 +476,11 @@ class _TestPageContainerState extends State<TestPageContainer> {
   late Timer _timer;
   int _start = 900;
 
-  // [DIUBAH] Durasi section diperbarui
   final Map<TestSection, int> _sectionDurations = {
-    TestSection.reading: 900, // 15 minutes
-    TestSection.listening: 900, // 15 minutes
-    TestSection.writing: 1200, // 20 minutes
-    TestSection.structure: 900, // 15 minutes
+    TestSection.reading: 900,
+    TestSection.listening: 900,
+    TestSection.writing: 1200,
+    TestSection.structure: 900,
   };
 
   @override
@@ -525,7 +522,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  // [DIUBAH] Judul section diperbarui
   String _getSectionTitle(TestSection section) {
     switch (section) {
       case TestSection.reading:
@@ -576,7 +572,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
       ),
       body: Column(
         children: [
-          // Section progress bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Row(
@@ -604,7 +599,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
             ),
           ),
           const SizedBox(height: 16),
-          // Section title
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
@@ -616,7 +610,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
             ),
           ),
           const SizedBox(height: 16),
-          // Main content
           Expanded(
             child: PageView.builder(
               controller: _pageController,
@@ -642,7 +635,6 @@ class _TestPageContainerState extends State<TestPageContainer> {
                         curve: Curves.easeIn,
                       );
                     } else {
-                      // Handle test completion
                       _showCompletionDialog(context);
                     }
                   },
@@ -676,10 +668,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                'assets/images/trophy.svg', // Assumes you have an SVG asset
-                height: 80,
-              ),
+              SvgPicture.asset('assets/images/trophy.svg', height: 80),
               const SizedBox(height: 16),
               const Text(
                 "Selamat, Anda telah menyelesaikan test ini. Hasil akan tersedia di halaman profil Anda.",
@@ -692,9 +681,9 @@ class _TestPageContainerState extends State<TestPageContainer> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Go back from TestPageContainer
-                Navigator.of(context).pop(); // Go back from TestDetailPage
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: const Text(
                 "Kembali ke Daftar Test",
@@ -711,8 +700,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
   }
 }
 
-// --- INDIVIDUAL TEST SECTIONS WIDGETS ---
-
+// --- INDIVIDUAL TEST SECTIONS WIDGETS (Tidak ada perubahan) ---
 class TestSectionWidget extends StatefulWidget {
   final TestSection section;
   final VoidCallback onNext;
@@ -728,10 +716,8 @@ class TestSectionWidget extends StatefulWidget {
 }
 
 class _TestSectionWidgetState extends State<TestSectionWidget> {
-  final Map<String, int?> _selectedAnswers =
-      {}; // Map to hold selected answer index for each question
+  final Map<String, int?> _selectedAnswers = {};
 
-  // --- State for Listening Section ---
   bool _isPlaying = false;
   Timer? _audioTimer;
   final Duration _audioDuration = const Duration(minutes: 2, seconds: 40);
@@ -740,7 +726,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
   @override
   void dispose() {
     _audioTimer?.cancel();
-    // _recordingTimer?.cancel(); // Dihapus
     super.dispose();
   }
 
@@ -776,9 +761,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     });
   }
 
-  // [DIHAPUS] Logic untuk recorder tidak lagi diperlukan
-  // void _toggleRecording() { ... }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -789,7 +771,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           if (widget.section == TestSection.reading) _buildReadingSection(),
           if (widget.section == TestSection.listening) _buildListeningSection(),
           if (widget.section == TestSection.writing) _buildWritingSection(),
-          // [DIUBAH] Memanggil widget untuk section Structure
           if (widget.section == TestSection.structure) _buildStructureSection(),
           const SizedBox(height: 40),
           _buildNextButton(context),
@@ -931,7 +912,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     );
   }
 
-  // [DITAMBAHKAN] Widget untuk menampilkan soal Structure
   Widget _buildStructureSection() {
     final structureQuestions = MockData.questions[TestSection.structure]!;
     return Column(
@@ -945,7 +925,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
       ],
     );
   }
-
 
   Widget _buildQuestionCard(Question question, int number) {
     return Container(
@@ -1036,7 +1015,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           ),
         ),
         child: Text(
-          // [DIUBAH] Kondisi untuk tombol Finish disesuaikan
           widget.section == TestSection.structure
               ? "Finish Test"
               : "Next Section",
