@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 // --- Reusable Widgets (Tidak ada perubahan di sini) ---
 class AppIcon extends StatelessWidget {
@@ -14,7 +15,7 @@ class AppIcon extends StatelessWidget {
     super.key,
     required this.icon,
     this.backgroundColor = const Color(0xffCBDCEB),
-    this.iconColor = const Color(0xff6D94C5),
+    this.iconColor = AppColors.primary,
     this.isCircle = false,
   });
 
@@ -47,7 +48,7 @@ class SectionHeader extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: const Color(0xff6D94C5),
+            color: AppColors.primary,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -164,8 +165,8 @@ class TestDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           testTitle,
-          style: const TextStyle(
-            color: Color(0xff6D94C5),
+          style: TextStyle(
+            color: AppColors.primary,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -173,7 +174,7 @@ class TestDetailPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xff6D94C5)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -243,7 +244,7 @@ class TestDetailPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
+                    colors: [AppColors.primary, AppColors.accent],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -276,7 +277,7 @@ class TestDetailPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Icon(icon, color: const Color(0xffffa97a), size: 24),
+          Icon(icon, color: AppColors.accent, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -286,7 +287,7 @@ class TestDetailPage extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Color(0xff6D94C5),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -319,7 +320,7 @@ class TestPreparationPage extends StatelessWidget {
         title: const Text(
           "Get Ready!",
           style: TextStyle(
-            color: Color(0xff6D94C5),
+            color: AppColors.primary,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -327,7 +328,7 @@ class TestPreparationPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xff6D94C5)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -378,7 +379,7 @@ class TestPreparationPage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: const Color(0xffffa97a),
+                  backgroundColor: AppColors.accent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -424,7 +425,7 @@ class TestPreparationPage extends StatelessWidget {
           AppIcon(
             icon: icon,
             backgroundColor: const Color(0xffE8DFCA),
-            iconColor: const Color(0xff6D94C5),
+            iconColor: AppColors.primary,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -436,7 +437,7 @@ class TestPreparationPage extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff6D94C5),
+                    color: AppColors.primary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -542,13 +543,13 @@ class _TestPageContainerState extends State<TestPageContainer> {
       appBar: AppBar(
         title: Text(
           widget.testTitle,
-          style: const TextStyle(color: Color(0xff6D94C5)),
+          style: const TextStyle(color: AppColors.primary),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Iconsax.close_circle, color: Color(0xffffa97a)),
+          icon: const Icon(Iconsax.close_circle, color: AppColors.accent),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
@@ -556,12 +557,12 @@ class _TestPageContainerState extends State<TestPageContainer> {
             padding: const EdgeInsets.only(right: 16),
             child: Row(
               children: [
-                const Icon(Iconsax.clock, color: Color(0xff6D94C5), size: 20),
+                const Icon(Iconsax.clock, color: AppColors.primary, size: 20),
                 const SizedBox(width: 4),
                 Text(
                   _formatTime(_start),
                   style: const TextStyle(
-                    color: Color(0xff6D94C5),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -588,9 +589,9 @@ class _TestPageContainerState extends State<TestPageContainer> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: isCompleted
-                          ? const Color(0xffffa97a)
+                          ? AppColors.accent
                           : isCurrent
-                          ? const Color(0xff6D94C5)
+                          ? AppColors.primary
                           : const Color(0xffCBDCEB),
                     ),
                   ),
@@ -605,7 +606,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
               _getSectionTitle(_sections[_currentSectionIndex]),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: const Color(0xff6D94C5),
+                color: AppColors.primary,
               ),
             ),
           ),
@@ -661,7 +662,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
             "Test Selesai!",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xff6D94C5),
+              color: AppColors.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -688,7 +689,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
               child: const Text(
                 "Kembali ke Daftar Test",
                 style: TextStyle(
-                  color: Color(0xffffa97a),
+                  color: AppColors.accent,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -818,7 +819,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Color(0xff6D94C5),
+              color: AppColors.primary,
             ),
           ),
           SizedBox(height: 8),
@@ -855,7 +856,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Color(0xff6D94C5),
+                  color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -865,7 +866,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
                 child: Icon(
                   _isPlaying ? Iconsax.pause_circle5 : Iconsax.play_circle5,
                   size: 80,
-                  color: const Color(0xffffa97a),
+                  color: AppColors.accent,
                 ),
               ),
               const SizedBox(height: 8),
@@ -943,7 +944,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Color(0xff6D94C5),
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 8),
@@ -976,7 +977,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xffffa97a) : Colors.white,
+          color: isSelected ? AppColors.accent : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: const Color(0xffCBDCEB)),
         ),
@@ -1009,7 +1010,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
         onPressed: widget.onNext,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: const Color(0xff6D94C5),
+          backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

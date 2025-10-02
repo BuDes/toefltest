@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -26,7 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: const Color(0xFF6D94C5),
+        backgroundColor: AppColors.primary,
         elevation: 0,
       ),
       body: Padding(
@@ -50,7 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: const BoxDecoration(
-                          color: Color(0xFF6D94C5),
+                          color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -78,14 +79,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xFF6D94C5), // warna border default
+                      color: AppColors.primary, // warna border default
                       width: 1.5,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xffffa97a), // 🎨 warna saat fokus
+                      color: AppColors.accent, // 🎨 warna saat fokus
                       width: 2,
                     ),
                   ),
@@ -110,14 +111,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xFF6D94C5), // warna border default
+                      color: AppColors.primary, // warna border default
                       width: 1.5,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xffffa97a), // 🎨 warna saat fokus
+                      color: AppColors.accent, // 🎨 warna saat fokus
                       width: 2,
                     ),
                   ),
@@ -141,14 +142,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xFF6D94C5), // warna border default
+                      color: AppColors.primary, // warna border default
                       width: 1.5,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: const BorderSide(
-                      color: Color(0xffffa97a), // 🎨 warna saat fokus
+                      color: AppColors.accent, // 🎨 warna saat fokus
                       width: 2,
                     ),
                   ),
@@ -160,7 +161,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               // 🔹 Save Button
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6D94C5),
+                  backgroundColor: AppColors.primary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),

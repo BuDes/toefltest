@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:toeflapp/pages/practice/practice_result_page.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import 'practices_detail_page.dart'; // halaman simulasi test
 
 class PracticeTestPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class PracticeTestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff6D94C5),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         title: const Text(
           "Practice Test",
@@ -39,7 +40,7 @@ class PracticeTestPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xff6D94C5),
+                    color: AppColors.primary,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -48,7 +49,8 @@ class PracticeTestPage extends StatelessWidget {
                 _testCard(
                   context,
                   title: "Practice Test",
-                  subtitle: "4 Bagian: Listening, Reading, Writing, & Structure",
+                  subtitle:
+                      "4 Bagian: Listening, Reading, Writing, & Structure",
                   icon: Icons.assignment,
                   onTap: () {
                     Navigator.push(
@@ -117,7 +119,7 @@ class PracticeTestPage extends StatelessWidget {
                 color: const Color(0xffE8DFCA),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: const Color(0xff6D94C5)),
+              child: Icon(icon, color: AppColors.primary),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -147,7 +149,7 @@ class PracticeTestPage extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(99),
                 gradient: const LinearGradient(
-                  colors: [Color(0xff6D94C5), Color(0xff89CFF0)],
+                  colors: [AppColors.primary, Color(0xff89CFF0)],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),

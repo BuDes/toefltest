@@ -6,6 +6,7 @@ import 'package:toeflapp/pages/practice/practice_page.dart';
 import 'package:toeflapp/pages/menu/reading/reading_page.dart';
 import 'package:toeflapp/pages/menu/structure/structure_page.dart';
 import 'package:toeflapp/pages/menu/writing/writing_page.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -38,12 +39,12 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "Selamat Datang.. 👋",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xff6D94C5),
+                      color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -51,7 +52,7 @@ class HomePage extends StatelessWidget {
                     'Jenis Materi',
                     style: TextStyle(
                       fontSize: 18,
-                      color: Color(0xff6D94C5),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -66,7 +67,7 @@ class HomePage extends StatelessWidget {
                           'assets/images/icon_headphones.svg',
                           width: 35,
                           height: 35,
-                          color: const Color(0xffffa97a),
+                          color: AppColors.accent,
                         ),
                         "Listening",
                         "200+ Audio",
@@ -78,7 +79,7 @@ class HomePage extends StatelessWidget {
                           'assets/images/icon_reading.svg',
                           width: 35,
                           height: 35,
-                          color: const Color(0xffffa97a),
+                          color: AppColors.accent,
                         ),
                         "Reading",
                         "400+ Pertanyaan",
@@ -90,7 +91,7 @@ class HomePage extends StatelessWidget {
                           'assets/images/icon_pen.svg',
                           width: 35,
                           height: 35,
-                          color: const Color(0xffffa97a),
+                          color: AppColors.accent,
                         ),
                         "Writing",
                         "100+ Sampel",
@@ -102,7 +103,7 @@ class HomePage extends StatelessWidget {
                           'assets/images/icon_structure.svg',
                           width: 35,
                           height: 35,
-                          color: const Color(0xffffa97a),
+                          color: AppColors.accent,
                         ),
                         "Structure",
                         "50+ Topik",
@@ -116,7 +117,7 @@ class HomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff6D94C5),
+                      color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -143,7 +144,7 @@ class HomePage extends StatelessWidget {
                             ),
                             child: const Icon(
                               Icons.app_registration_rounded,
-                              color: Color(0xff6D94C5),
+                              color: AppColors.primary,
                               size: 24,
                             ),
                           ),
@@ -157,7 +158,7 @@ class HomePage extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
-                                    color: Color(0xff6D94C5),
+                                    color: AppColors.primary,
                                   ),
                                 ),
                                 Text(
@@ -195,19 +196,19 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 8),
 
                         _progressTile("Reading", 0.3, [
-                          Color(0xffffa97a),
+                          AppColors.accent,
                           Color(0xffF5EFE6),
                         ]),
                         _progressTile("Listening", 0.8, [
-                          Color(0xffffa97a),
+                          AppColors.accent,
                           Color(0xffF5EFE6),
                         ]),
                         _progressTile("Writing", 0.4, [
-                          Color(0xffffa97a),
+                          AppColors.accent,
                           Color(0xffF5EFE6),
                         ]),
                         _progressTile("Structure", 0.6, [
-                          Color(0xffffa97a),
+                          AppColors.accent,
                           Color(0xffF5EFE6),
                         ]),
                         const SizedBox(height: 50),

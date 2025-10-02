@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/widgets/botom_nav.dart';
 import 'package:toeflapp/pages/auth/register_page.dart';
 
@@ -13,7 +14,7 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       extendBody: true,
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -43,12 +44,9 @@ class LoginPage extends StatelessWidget {
                     width: size.width * 0.9,
                     padding: const EdgeInsets.all(28.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
+                      color: Colors.white12,
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1.2,
-                      ),
+                      border: Border.all(color: Colors.white24, width: 1.2),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -64,7 +62,7 @@ class LoginPage extends StatelessWidget {
                               ?.copyWith(
                                 fontWeight: FontWeight.w500,
 
-                                color: Color(0xff6D94C5),
+                                color: AppColors.primary,
                               ),
                           textAlign: TextAlign.center,
                         ),
@@ -89,8 +87,8 @@ class LoginPage extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
-                                side: const BorderSide(
-                                  color: Color(0xff6D94C5),
+                                side: BorderSide(
+                                  color: AppColors.primary,
                                   width: 1,
                                 ),
                               ),
@@ -110,7 +108,7 @@ class LoginPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xff6D94C5),
+                                color: AppColors.primary,
                               ),
                             ),
                           ),
@@ -165,13 +163,13 @@ class LoginPage extends StatelessWidget {
   }) {
     return TextField(
       obscureText: obscure,
-      style: const TextStyle(color: Color(0xff6D94C5)),
+      style: const TextStyle(color: AppColors.primary),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xff6D94C5)),
-        prefixIcon: Icon(icon, color: Color(0xff6D94C5)),
+        hintStyle: const TextStyle(color: AppColors.primary),
+        prefixIcon: Icon(icon, color: AppColors.primary),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
+        fillColor: Colors.white12,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(color: Colors.white),

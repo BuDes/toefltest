@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/widgets/botom_nav.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -51,7 +52,7 @@ class RegisterPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: Color(0xff6D94C5),
+                              color: AppColors.primary,
                             ),
                         textAlign: TextAlign.center,
                       ),
@@ -79,7 +80,7 @@ class RegisterPage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                               side: const BorderSide(
-                                color: Color(0xff6D94C5),
+                                color: AppColors.primary,
                                 width: 1,
                               ),
                             ),
@@ -98,7 +99,7 @@ class RegisterPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xff6D94C5),
+                              color: AppColors.primary,
                             ),
                           ),
                         ),
@@ -165,11 +166,11 @@ class RegisterPage extends StatelessWidget {
   }) {
     return TextField(
       obscureText: obscure,
-      style: const TextStyle(color: Color(0xff6D94C5)),
+      style: const TextStyle(color: AppColors.primary),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xff6D94C5)),
-        prefixIcon: Icon(icon, color: Color(0xff6D94C5)),
+        hintStyle: const TextStyle(color: AppColors.primary),
+        prefixIcon: Icon(icon, color: AppColors.primary),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
         enabledBorder: OutlineInputBorder(

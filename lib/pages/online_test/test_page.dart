@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:toeflapp/pages/online_test/test_flow_pages.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 // [BARU] Data Model untuk merepresentasikan sebuah Test
 // Ini adalah best practice untuk memisahkan data dari UI.
@@ -88,10 +89,10 @@ class _TestPageState extends State<TestPage> {
             borderRadius: BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xffF5EFE6),
-          title: const Text(
+          title: Text(
             "Konfirmasi Pendaftaran",
             style: TextStyle(
-              color: Color(0xff6D94C5),
+              color: AppColors.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -110,7 +111,7 @@ class _TestPageState extends State<TestPage> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xffffa97a),
+                backgroundColor: AppColors.accent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -149,7 +150,7 @@ class _TestPageState extends State<TestPage> {
         automaticallyImplyLeading: false,
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
+            colors: [AppColors.primary, AppColors.accent],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(bounds),
@@ -254,7 +255,7 @@ class _TestPageState extends State<TestPage> {
         title: Text(
           test.title,
           style: const TextStyle(
-            color: Color(0xff6D94C5),
+            color: AppColors.primary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -272,7 +273,7 @@ class _TestPageState extends State<TestPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
+                colors: [AppColors.primary, AppColors.accent],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -331,7 +332,7 @@ class _TestPageState extends State<TestPage> {
           children: [
             const AppIcon(
               icon: Iconsax.calendar_tick, // [UBAH] Icon lebih relevan
-              backgroundColor: Color(0xff6D94C5),
+              backgroundColor: AppColors.primary,
               iconColor: Colors.white,
               isCircle: true,
             ),
@@ -343,7 +344,7 @@ class _TestPageState extends State<TestPage> {
                   Text(
                     test.title,
                     style: const TextStyle(
-                      color: Color(0xff6D94C5),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -390,7 +391,7 @@ class AppIcon extends StatelessWidget {
     super.key,
     required this.icon,
     this.backgroundColor = const Color(0xffCBDCEB),
-    this.iconColor = const Color(0xff6D94C5),
+    this.iconColor = AppColors.primary,
     this.isCircle = false,
   });
 
@@ -424,7 +425,7 @@ class SectionHeader extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: const Color(0xff6D94C5),
+            color: AppColors.primary,
             fontWeight: FontWeight.w800,
           ),
         ),

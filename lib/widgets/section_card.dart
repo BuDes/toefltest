@@ -1,21 +1,27 @@
 // lib/widgets/section_card.dart
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import '../models/section_model.dart';
 
-const Color primaryBlue = Color(0xff6D94C5);
+const Color primaryBlue = AppColors.primary;
 const Color cream2 = Color(0xffE8DFCA);
 
 class SectionCard extends StatefulWidget {
   final SectionData data;
   final void Function(PracticeData) onOpenPractice;
 
-  const SectionCard({super.key, required this.data, required this.onOpenPractice});
+  const SectionCard({
+    super.key,
+    required this.data,
+    required this.onOpenPractice,
+  });
 
   @override
   State<SectionCard> createState() => _SectionCardState();
 }
 
-class _SectionCardState extends State<SectionCard> with SingleTickerProviderStateMixin {
+class _SectionCardState extends State<SectionCard>
+    with SingleTickerProviderStateMixin {
   bool expanded = false;
   late final AnimationController _ac;
   late final Animation<double> _anim;
@@ -23,7 +29,10 @@ class _SectionCardState extends State<SectionCard> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _ac = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _ac = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
     _anim = CurvedAnimation(parent: _ac, curve: Curves.easeInOut);
   }
 
@@ -56,7 +65,11 @@ class _SectionCardState extends State<SectionCard> with SingleTickerProviderStat
             color: Colors.white.withOpacity(0.9),
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
           child: Row(
@@ -85,13 +98,13 @@ class _SectionCardState extends State<SectionCard> with SingleTickerProviderStat
                 onTap: toggle,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xffffa97a),
-                        Color(0xff6C8FC3),
-                      ],
+                      colors: [AppColors.accent, Color(0xff6C8FC3)],
                     ),
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -109,7 +122,10 @@ class _SectionCardState extends State<SectionCard> with SingleTickerProviderStat
                       AnimatedRotation(
                         turns: expanded ? 0.5 : 0.0,
                         duration: const Duration(milliseconds: 300),
-                        child: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                        child: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -144,7 +160,11 @@ class PracticeListCard extends StatelessWidget {
   final PracticeData practice;
   final VoidCallback onTap;
 
-  const PracticeListCard({super.key, required this.practice, required this.onTap});
+  const PracticeListCard({
+    super.key,
+    required this.practice,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +175,11 @@ class PracticeListCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 3)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
       child: Row(
@@ -176,28 +200,41 @@ class PracticeListCard extends StatelessWidget {
               children: [
                 Text(
                   practice.title,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: primaryBlue),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: primaryBlue,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
                           'Correct: ${(practice.percentCorrect * 100).toInt()}%',
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                          style: const TextStyle(
+                            color: Colors.black54,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     if (practice.isNew)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xffE9F2FF),
                           borderRadius: BorderRadius.circular(12),
@@ -223,7 +260,7 @@ class PracticeListCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: const BoxDecoration(
-                color: Color(0xffffa97a),
+                color: AppColors.accent,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.chevron_right, color: Colors.white),

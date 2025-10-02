@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 class GradientBorderContainer extends StatelessWidget {
   final Widget child;
@@ -11,7 +12,7 @@ class GradientBorderContainer extends StatelessWidget {
     super.key,
     required this.child,
     this.gradient = const LinearGradient(
-      colors: [Color(0xff6D94C5), Colors.orange],
+      colors: [AppColors.primary, Colors.orange],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
@@ -24,9 +25,7 @@ class GradientBorderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ShapeDecoration(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         gradient: gradient,
       ),
       child: Container(

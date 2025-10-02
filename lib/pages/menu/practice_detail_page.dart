@@ -5,8 +5,9 @@ import 'package:toeflapp/pages/menu/listening/listening_practice_page.dart';
 import 'package:toeflapp/pages/menu/reading/reading_practice_page.dart';
 import 'package:toeflapp/pages/menu/structure/structure_detail_page.dart';
 import 'package:toeflapp/pages/menu/writing/writing_practice_page.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
-const Color primaryBlue = Color(0xff6D94C5);
+const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 const Color cream2 = Color(0xffE8DFCA);
 

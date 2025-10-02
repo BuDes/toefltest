@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:toeflapp/models/section_model.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
-const Color primaryBlue = Color(0xff6D94C5);
+const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 
 // Enum untuk membedakan tipe soal
@@ -70,7 +71,8 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
         _StructureQuestion(
           id: 2,
           type: QuestionType.completion,
-          text: "The manager was angry because his secreatary _______ to type the letter.",
+          text:
+              "The manager was angry because his secreatary _______ to type the letter.",
           options: ["has forgot", "was forgetting", "had forgotten", "forgets"],
           correctAnswerIndex: 2,
         ),
@@ -82,7 +84,10 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
           id: 3,
           type: QuestionType.errorIdentification,
           richText: [
-            const TextSpan(text: "Some of the plants in this store requires very little care, but this one needs much more sunlight than the "),
+            const TextSpan(
+              text:
+                  "Some of the plants in this store requires very little care, but this one needs much more sunlight than the ",
+            ),
             _underlined("others ones", 'A'),
             const TextSpan(text: ". This is a "),
             _underlined("challenging", 'B'),
@@ -133,9 +138,10 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
             fontWeight: FontWeight.bold,
             color: primaryBlue,
           ),
-          recognizer: TapGestureRecognizer()..onTap = () {
-            // bisa tambahkan interaksi jika diperlukan
-          }
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              // bisa tambahkan interaksi jika diperlukan
+            },
         ),
       ],
     );
@@ -149,7 +155,10 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
         backgroundColor: Colors.white,
         title: Text(
           widget.practice.title,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: primaryBlue),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: primaryBlue,
+          ),
         ),
         iconTheme: const IconThemeData(color: primaryBlue),
       ),
@@ -193,7 +202,9 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
                         // Logika submit nanti di sini
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Answers submitted (UI only)!")),
+                          const SnackBar(
+                            content: Text("Answers submitted (UI only)!"),
+                          ),
                         );
                       },
                       child: const Text('Submit'),
@@ -246,12 +257,20 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
           if (question.type == QuestionType.completion)
             Text(
               question.text,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, height: 1.5),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.5,
+              ),
             )
           else
             RichText(
               text: TextSpan(
-                style: const TextStyle(fontSize: 16, color: Colors.black87, height: 1.5),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  height: 1.5,
+                ),
                 children: question.richText,
               ),
             ),
@@ -267,9 +286,14 @@ class _StructurePracticePageState extends State<StructurePracticePage> {
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 10,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected ? primaryBlue.withOpacity(0.1) : Colors.transparent,
+                  color: isSelected
+                      ? primaryBlue.withOpacity(0.1)
+                      : Colors.transparent,
                   border: Border.all(
                     color: isSelected ? primaryBlue : Colors.grey.shade300,
                   ),

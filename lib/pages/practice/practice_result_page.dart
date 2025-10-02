@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
-const Color primaryBlue = Color(0xff6D94C5);
+const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 
 class PracticeTestResultPage extends StatelessWidget {

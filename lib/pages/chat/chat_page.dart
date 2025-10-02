@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import 'chat_detail_page.dart';
 
 class ChatPage extends StatelessWidget {
@@ -17,16 +18,13 @@ class ChatPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
+            colors: [AppColors.primary, AppColors.accent],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(bounds),
           child: const Text(
             "Tanya Pakar",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         centerTitle: true,
@@ -42,17 +40,14 @@ class ChatPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF6D94C5),
+                color: AppColors.primary,
               ),
             ),
             SizedBox(height: 8),
             Text(
               "Tanyakan apapun seputar TOEFL\ndan pakar akan menjawab ✨",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF8D8D8D),
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Color(0xFF8D8D8D), fontSize: 14),
             ),
           ],
         ),
@@ -62,10 +57,7 @@ class ChatPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [
-                Color(0xFF6D94C5),
-                Color(0xffffa97a),
-              ],
+              colors: [AppColors.primary, AppColors.accent],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -84,9 +76,7 @@ class ChatPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const ChatDetailPage(),
-                ),
+                MaterialPageRoute(builder: (_) => const ChatDetailPage()),
               );
             },
             child: const Icon(

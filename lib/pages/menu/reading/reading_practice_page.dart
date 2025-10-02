@@ -1,7 +1,8 @@
 // lib/pages/menu/reading/reading_practice_page.dart
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
-const Color primaryBlue = Color(0xff6D94C5);
+const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 
 class PracticeReadingPage extends StatefulWidget {

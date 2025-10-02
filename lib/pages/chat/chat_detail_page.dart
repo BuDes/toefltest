@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
-const Color primaryBlue = Color(0xFF6D94C5);
-const Color accentOrange = Color(0xffffa97a);
+const Color primaryBlue = AppColors.primary;
+const Color accentOrange = AppColors.accent;
 
 class ChatDetailPage extends StatefulWidget {
   const ChatDetailPage({super.key});
@@ -27,10 +28,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     // Simulasi balasan bot
     Future.delayed(const Duration(milliseconds: 800), () {
       setState(() {
-        messages.add({
-          "sender": "bot",
-          "text": "Oke, saya catat ya! ✨",
-        });
+        messages.add({"sender": "bot", "text": "Oke, saya catat ya! ✨"});
       });
     });
   }
@@ -58,21 +56,28 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 final msg = messages[index];
                 final isUser = msg["sender"] == "user";
                 return Align(
-                  alignment:
-                      isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
-                      color: isUser ? accentOrange : primaryBlue.withOpacity(0.9),
+                      color: isUser
+                          ? accentOrange
+                          : primaryBlue.withOpacity(0.9),
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(16),
                         topRight: const Radius.circular(16),
-                        bottomLeft:
-                            isUser ? const Radius.circular(16) : Radius.zero,
-                        bottomRight:
-                            isUser ? Radius.zero : const Radius.circular(16),
+                        bottomLeft: isUser
+                            ? const Radius.circular(16)
+                            : Radius.zero,
+                        bottomRight: isUser
+                            ? Radius.zero
+                            : const Radius.circular(16),
                       ),
                     ),
                     child: Text(
@@ -99,7 +104,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -116,8 +123,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         color: primaryBlue,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.send,
-                          color: Colors.white, size: 20),
+                      child: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ],

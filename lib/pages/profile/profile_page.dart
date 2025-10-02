@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:toeflapp/pages/auth/login_page.dart';
 import 'package:toeflapp/pages/profile/edit_profile.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -28,8 +29,8 @@ class ProfilePage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF6D94C5), Color(0xffffa97a)],
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.accent],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -48,8 +49,8 @@ class ProfilePage extends StatelessWidget {
                     shaderCallback: (Rect bounds) {
                       return const LinearGradient(
                         colors: [
-                          Color(0xFF6D94C5), // Starting color
-                          Color(0xffffa97a), // Ending color
+                          AppColors.primary, // Starting color
+                          AppColors.accent, // Ending color
                           // You can add more colors to the list
                         ],
                         begin: Alignment.topLeft,
@@ -83,12 +84,12 @@ class ProfilePage extends StatelessWidget {
                     },
                     child: Row(
                       children: const [
-                        Icon(Iconsax.edit, size: 16, color: Color(0xFF6D94C5)),
+                        Icon(Iconsax.edit, size: 16, color: AppColors.primary),
                         SizedBox(width: 6),
                         Text(
                           "Edit Profile",
                           style: TextStyle(
-                            color: Color(0xFF6D94C5),
+                            color: AppColors.primary,
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
@@ -107,7 +108,7 @@ class ProfilePage extends StatelessWidget {
           Text(
             "Progress",
             style: theme.textTheme.titleMedium?.copyWith(
-              color: const Color(0xFF6D94C5),
+              color: AppColors.primary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -126,7 +127,7 @@ class ProfilePage extends StatelessWidget {
           Text(
             "Riwayat",
             style: theme.textTheme.titleMedium?.copyWith(
-              color: const Color(0xFF6D94C5),
+              color: AppColors.primary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -140,7 +141,7 @@ class ProfilePage extends StatelessWidget {
           // 🔹 Logout
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6D94C5), // 🎨 warna utama
+              backgroundColor: AppColors.primary, // 🎨 warna utama
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -170,7 +171,7 @@ class ProfilePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF6D94C5), Color(0xFFCBDCEB)], // 🎨 gradasi lembut
+          colors: [AppColors.primary, Color(0xFFCBDCEB)], // 🎨 gradasi lembut
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -215,7 +216,7 @@ class ProfilePage extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: const Color(0xFFCBDCEB),
-          child: Icon(icon, color: const Color(0xFF6D94C5)),
+          child: Icon(icon, color: AppColors.primary),
         ),
         title: Text(
           title,
