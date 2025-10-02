@@ -41,7 +41,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
           TextFormField(
             controller: widget.controller,
             obscureText: widget.isPassword && !_show,
-            style: TextStyle(color: AppColors.primary),
+            style: const TextStyle(color: AppColors.primary),
             keyboardType: widget.keyboardType,
             validator: widget.validator ?? _defaultValiator,
             decoration: InputDecoration(
@@ -52,7 +52,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
               fillColor: Colors.white12,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24),
-                borderSide: BorderSide(color: Colors.white),
+                borderSide: const BorderSide(color: Colors.white),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24),

@@ -165,7 +165,7 @@ class TestDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           testTitle,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.primary,
             fontSize: 20,
             fontWeight: FontWeight.bold,

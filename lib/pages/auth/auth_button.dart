@@ -26,7 +26,7 @@ class AuthButton extends StatelessWidget {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
-            side: BorderSide(
+            side: const BorderSide(
               color: AppColors.primary,
               width: 1,
             ),
@@ -36,7 +36,7 @@ class AuthButton extends StatelessWidget {
         onPressed: loading ? () {} : onPressed,
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: AppColors.primary,

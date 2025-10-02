@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginPage(),
+        builder: (context) => const LoginPage(),
       ),
       (route) => false,
     );
@@ -23,6 +23,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final user = context.watch<AuthViewModel>().currentUser!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6), // 🌿 warna background global
@@ -41,7 +42,7 @@ class ProfilePage extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [AppColors.primary, AppColors.accent],
                   ),
@@ -95,8 +96,8 @@ class ProfilePage extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(Iconsax.edit, size: 16, color: AppColors.primary),
                         SizedBox(width: 6),
                         Text(

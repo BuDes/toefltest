@@ -15,11 +15,11 @@ class _AuthCheckState extends State<AuthCheck> {
   void _checkToken() async {
     final authVM = context.read<AuthViewModel>();
     final navigator = Navigator.of(context);
-    Widget page = LoginPage();
+    Widget page = const LoginPage();
 
     final loggedIn = await authVM.loadProfile();
     if (loggedIn) {
-      page = BottomNav();
+      page = const BottomNav();
     }
 
     navigator.pushReplacement(MaterialPageRoute(builder: (context) => page));
@@ -33,6 +33,6 @@ class _AuthCheckState extends State<AuthCheck> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

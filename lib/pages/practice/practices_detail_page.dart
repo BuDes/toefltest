@@ -143,8 +143,8 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
           ),
         ),
         const SizedBox(height: 12),
-        GradientBorderContainer(
-          child: const Text(
+        const GradientBorderContainer(
+          child: Text(
             "Latihan ini meniru ujian TOEFL yang sesungguhnya.\n\n"
             "Materi test tediri dari beberapa bagian: Listening, Reading, Writing, & Structure.\n"
             "Pastikan kamu berada di tempat yang tenang dan memiliki waktu yang cukup.",

@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       "Selamat Datang.. 👋",
                       style: TextStyle(
                         fontSize: 22,
@@ -238,26 +238,26 @@ class _HomePageState extends State<HomePage> {
                     // TODO: progress from history
                     ListView(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.only(bottom: 20),
                       children: [
                         const SizedBox(height: 8),
 
                         _progressTile("Reading", 0.3, [
                           AppColors.accent,
-                          Color(0xffF5EFE6),
+                          const Color(0xffF5EFE6),
                         ]),
                         _progressTile("Listening", 0.8, [
                           AppColors.accent,
-                          Color(0xffF5EFE6),
+                          const Color(0xffF5EFE6),
                         ]),
                         _progressTile("Writing", 0.4, [
                           AppColors.accent,
-                          Color(0xffF5EFE6),
+                          const Color(0xffF5EFE6),
                         ]),
                         _progressTile("Structure", 0.6, [
                           AppColors.accent,
-                          Color(0xffF5EFE6),
+                          const Color(0xffF5EFE6),
                         ]),
                         const SizedBox(height: 50),
                       ],

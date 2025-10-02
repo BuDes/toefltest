@@ -9,7 +9,7 @@ class ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       error ?? "",
-      style: TextStyle(color: Colors.red),
+      style: const TextStyle(color: Colors.red),
     );
   }
 }

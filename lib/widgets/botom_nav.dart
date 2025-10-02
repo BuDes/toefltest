@@ -40,7 +40,7 @@ class _BottomNavState extends State<BottomNav> {
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.white.withOpacity(0.15),
               selectedItemColor: const Color.fromARGB(255, 58, 80, 107),
-              unselectedItemColor: Color.fromARGB(255, 44, 69, 100),
+              unselectedItemColor: const Color.fromARGB(255, 44, 69, 100),
               showUnselectedLabels: false,
               selectedFontSize: 14,
               unselectedFontSize: 12,

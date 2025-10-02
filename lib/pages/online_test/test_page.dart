@@ -89,7 +89,7 @@ class _TestPageState extends State<TestPage> {
             borderRadius: BorderRadius.circular(20),
           ),
           backgroundColor: const Color(0xffF5EFE6),
-          title: Text(
+          title: const Text(
             "Konfirmasi Pendaftaran",
             style: TextStyle(
               color: AppColors.primary,

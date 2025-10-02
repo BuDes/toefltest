@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     if (error == null) {
       navigator.pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => BottomNav(),
+          builder: (context) => const BottomNav(),
         ),
         (route) => false,
       );

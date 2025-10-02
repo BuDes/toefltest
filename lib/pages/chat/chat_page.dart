@@ -29,10 +29,10 @@ class ChatPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text("📩", style: TextStyle(fontSize: 72)),
             SizedBox(height: 20),
             Text(

@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (error == null) {
         navigator.pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => BottomNav(),
+            builder: (context) => const BottomNav(),
           ),
           (route) => false,
         );

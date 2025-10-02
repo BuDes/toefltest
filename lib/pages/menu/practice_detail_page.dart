@@ -26,9 +26,9 @@ class PracticeDetailPage extends StatelessWidget {
     final double percent = (practice?.percentCorrect ?? 0.0) * 100;
     // sample stats (UI only)
     final int correct = ((practice?.percentCorrect ?? 0.0) * 10).toInt();
-    final int incorrect = 4;
+    const int incorrect = 4;
     final int newItems = practice?.isNew == true ? 1 : 0;
-    final int marked = 0;
+    const int marked = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,9 +45,9 @@ class PracticeDetailPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: EdgeInsets.only(right: 12.0),
             child: CircleAvatar(
               backgroundColor: cream2,
               child: Icon(Icons.emoji_events, color: primaryBlue),
@@ -106,7 +106,7 @@ class PracticeDetailPage extends StatelessWidget {
                                 value: (percent / 100).clamp(0.0, 1.0),
                                 strokeWidth: 12,
                                 backgroundColor: Colors.grey.shade200,
-                                valueColor: AlwaysStoppedAnimation<Color>(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
                                   primaryBlue,
                                 ),
                               ),
