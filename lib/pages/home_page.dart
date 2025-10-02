@@ -35,162 +35,164 @@ class HomePage extends StatelessWidget {
             transform: Matrix4.rotationY(pi),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    "Selamat Datang.. 👋",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      "Selamat Datang.. 👋",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Jenis Materi',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Jenis Materi',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: [
-                      _menuCard(
-                        context,
-                        SvgPicture.asset(
-                          'assets/images/icon_headphones.svg',
-                          width: 35,
-                          height: 35,
-                          color: AppColors.accent,
-                        ),
-                        "Listening",
-                        "200+ Audio",
-                        onTap: () => _goTo(context, const ListeningPage()),
-                      ),
-                      _menuCard(
-                        context,
-                        SvgPicture.asset(
-                          'assets/images/icon_reading.svg',
-                          width: 35,
-                          height: 35,
-                          color: AppColors.accent,
-                        ),
-                        "Reading",
-                        "400+ Pertanyaan",
-                        onTap: () => _goTo(context, const ReadingPage()),
-                      ),
-                      _menuCard(
-                        context,
-                        SvgPicture.asset(
-                          'assets/images/icon_pen.svg',
-                          width: 35,
-                          height: 35,
-                          color: AppColors.accent,
-                        ),
-                        "Writing",
-                        "100+ Sampel",
-                        onTap: () => _goTo(context, const WritingPage()),
-                      ),
-                      _menuCard(
-                        context,
-                        SvgPicture.asset(
-                          'assets/images/icon_structure.svg',
-                          width: 35,
-                          height: 35,
-                          color: AppColors.accent,
-                        ),
-                        "Structure",
-                        "50+ Topik",
-                        onTap: () => _goTo(context, const StructurePage()),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Practice Test",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () => _goTo(context, const PracticeTestPage()),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffF5EFE6),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 154, 186, 212),
-                          width: 2,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xffE8DFCA),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(
-                              Icons.app_registration_rounded,
-                              color: AppColors.primary,
-                              size: 24,
-                            ),
+                    const SizedBox(height: 20),
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: [
+                        _menuCard(
+                          context,
+                          SvgPicture.asset(
+                            'assets/images/icon_headphones.svg',
+                            width: 35,
+                            height: 35,
+                            color: AppColors.accent,
                           ),
-                          const SizedBox(width: 16),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Full Practice Test",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: AppColors.primary,
+                          "Listening",
+                          "200+ Audio",
+                          onTap: () => _goTo(context, const ListeningPage()),
+                        ),
+                        _menuCard(
+                          context,
+                          SvgPicture.asset(
+                            'assets/images/icon_reading.svg',
+                            width: 35,
+                            height: 35,
+                            color: AppColors.accent,
+                          ),
+                          "Reading",
+                          "400+ Pertanyaan",
+                          onTap: () => _goTo(context, const ReadingPage()),
+                        ),
+                        _menuCard(
+                          context,
+                          SvgPicture.asset(
+                            'assets/images/icon_pen.svg',
+                            width: 35,
+                            height: 35,
+                            color: AppColors.accent,
+                          ),
+                          "Writing",
+                          "100+ Sampel",
+                          onTap: () => _goTo(context, const WritingPage()),
+                        ),
+                        _menuCard(
+                          context,
+                          SvgPicture.asset(
+                            'assets/images/icon_structure.svg',
+                            width: 35,
+                            height: 35,
+                            color: AppColors.accent,
+                          ),
+                          "Structure",
+                          "50+ Topik",
+                          onTap: () => _goTo(context, const StructurePage()),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Practice Test",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () => _goTo(context, const PracticeTestPage()),
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffF5EFE6),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 154, 186, 212),
+                            width: 2,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffE8DFCA),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(
+                                Icons.app_registration_rounded,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Full Practice Test",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: AppColors.primary,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  "Simulasi lengkap ujian TOEFL",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black87,
+                                  Text(
+                                    "Simulasi lengkap ujian TOEFL",
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                            color: Colors.black54,
-                          ),
-                        ],
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 18,
+                              color: Colors.black54,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Progress Belajar",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Progress Belajar",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView(
+                    ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.only(bottom: 20),
                       children: [
                         const SizedBox(height: 8),
@@ -214,8 +216,8 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 50),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

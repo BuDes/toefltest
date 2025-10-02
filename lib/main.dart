@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'pages/auth/login_page.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/pages/auth/auth_check.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
   // Aktifkan edge-to-edge mode biar nav bar gak hitam
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -27,11 +28,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TOEFL App',
-      theme: ThemeData(useMaterial3: true, fontFamily: "Poppins"),
-      home: const LoginPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthViewModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'TOEFL App',
+        theme: ThemeData(useMaterial3: true, fontFamily: "Poppins"),
+        home: const AuthCheck(),
+      ),
     );
   }
 }

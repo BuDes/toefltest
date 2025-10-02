@@ -1,12 +1,64 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/pages/auth/auth_button.dart';
+import 'package:toeflapp/pages/auth/auth_text_field.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/widgets/botom_nav.dart';
 import 'package:toeflapp/pages/auth/register_page.dart';
+import 'package:toeflapp/widgets/error_view.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _loading = false;
+  String? _error;
+
+  void _submitLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final navigator = Navigator.of(context);
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    final error = await context.read<AuthViewModel>().login(email, password);
+    if (error == null) {
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => BottomNav(),
+        ),
+        (route) => false,
+      );
+      return;
+    }
+
+    setState(() {
+      _loading = false;
+      _error = error;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,135 +100,86 @@ class LoginPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(32),
                       border: Border.all(color: Colors.white24, width: 1.2),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          "assets/images/logo.png",
-                          width: size.width * 0.2,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          "Welcome Back ✨",
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w500,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            "assets/images/logo.png",
+                            width: size.width * 0.2,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "Welcome Back ✨",
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w500,
 
-                                color: AppColors.primary,
-                              ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 40),
-                        _buildTextField(
-                          hint: "Email",
-                          icon: Icons.mail_rounded,
-                        ),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          hint: "Password",
-                          icon: Icons.lock_rounded,
-                          obscure: true,
-                        ),
-                        const SizedBox(height: 30),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 18),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                side: BorderSide(
                                   color: AppColors.primary,
-                                  width: 1,
                                 ),
-                              ),
-                              elevation: 0,
-                              // elevation: 6,
-                            ),
-                            onPressed: () {
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 40),
+                          ErrorView(error: _error),
+                          AuthTextField(
+                            controller: _emailController,
+                            hint: "Email",
+                            icon: Icons.mail_rounded,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 20),
+                          AuthTextField(
+                            controller: _passwordController,
+                            hint: "Password",
+                            icon: Icons.lock_rounded,
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 30),
+                          AuthButton(
+                            onPressed: _submitLogin,
+                            text: "Login",
+                            loading: _loading,
+                          ),
+                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
+                          GestureDetector(
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const BottomNav(),
+                                  builder: (_) => const RegisterPage(),
                                 ),
                               );
                             },
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        const SizedBox(height: 16),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const RegisterPage(),
-                              ),
-                            );
-                          },
-                          child: RichText(
-                            text: const TextSpan(
-                              text: "Belum punya akun? ",
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: "Register",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                  ),
+                            child: RichText(
+                              text: const TextSpan(
+                                text: "Belum punya akun? ",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ],
+                                children: [
+                                  TextSpan(
+                                    text: "Register",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String hint,
-    required IconData icon,
-    bool obscure = false,
-  }) {
-    return TextField(
-      obscureText: obscure,
-      style: const TextStyle(color: AppColors.primary),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(color: AppColors.primary),
-        prefixIcon: Icon(icon, color: AppColors.primary),
-        filled: true,
-        fillColor: Colors.white12,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: const BorderSide(color: Colors.white),
         ),
       ),
     );

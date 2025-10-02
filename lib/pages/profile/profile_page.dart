@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/auth/login_page.dart';
 import 'package:toeflapp/pages/profile/edit_profile.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
+  void _logout(BuildContext context) {
+    context.read<AuthViewModel>().logout();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,13 +161,7 @@ class ProfilePage extends StatelessWidget {
               ),
               elevation: 4,
             ),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
-              );
-            },
+            onPressed: () => _logout(context),
             icon: const Icon(Iconsax.logout, color: Colors.white),
             label: const Text(
               "Logout",

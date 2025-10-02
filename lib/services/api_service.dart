@@ -6,7 +6,7 @@ class ApiService {
   ApiService._();
 
   static const String hostUrl = "http://192.168.18.14:3000";
-  static const String baseUrl = "$hostUrl/api/v1";
+  static const String baseUrl = "$hostUrl/api";
 
   static String? token;
   static String? role;
