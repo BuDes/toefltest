@@ -1,18 +1,28 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:toeflapp/pages/menu/listening/listening_page.dart';
+import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/practice/practice_page.dart';
-import 'package:toeflapp/pages/menu/reading/reading_page.dart';
-import 'package:toeflapp/pages/menu/structure/structure_page.dart';
-import 'package:toeflapp/pages/menu/writing/writing_page.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/materi_view_model.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late Future _jenisFuture;
 
   void _goTo(BuildContext context, Widget page) {
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _jenisFuture = context.read<MateriViewModel>().getJenisMateri();
   }
 
   @override
@@ -58,59 +68,94 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Wrap(
-                      spacing: 16,
-                      runSpacing: 16,
-                      children: [
-                        _menuCard(
-                          context,
-                          SvgPicture.asset(
-                            'assets/images/icon_headphones.svg',
-                            width: 35,
-                            height: 35,
-                            color: AppColors.accent,
-                          ),
-                          "Listening",
-                          "200+ Audio",
-                          onTap: () => _goTo(context, const ListeningPage()),
-                        ),
-                        _menuCard(
-                          context,
-                          SvgPicture.asset(
-                            'assets/images/icon_reading.svg',
-                            width: 35,
-                            height: 35,
-                            color: AppColors.accent,
-                          ),
-                          "Reading",
-                          "400+ Pertanyaan",
-                          onTap: () => _goTo(context, const ReadingPage()),
-                        ),
-                        _menuCard(
-                          context,
-                          SvgPicture.asset(
-                            'assets/images/icon_pen.svg',
-                            width: 35,
-                            height: 35,
-                            color: AppColors.accent,
-                          ),
-                          "Writing",
-                          "100+ Sampel",
-                          onTap: () => _goTo(context, const WritingPage()),
-                        ),
-                        _menuCard(
-                          context,
-                          SvgPicture.asset(
-                            'assets/images/icon_structure.svg',
-                            width: 35,
-                            height: 35,
-                            color: AppColors.accent,
-                          ),
-                          "Structure",
-                          "50+ Topik",
-                          onTap: () => _goTo(context, const StructurePage()),
-                        ),
-                      ],
+                    FutureBuilder(
+                      future: _jenisFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: [
+                              _loadingMenuCard(context),
+                              _loadingMenuCard(context),
+                              _loadingMenuCard(context),
+                            ],
+                          );
+                        }
+
+                        final listJenis = context.read<MateriViewModel>().jenis;
+                        return Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          children: listJenis.map((jenis) {
+                            return _menuCard(
+                              context,
+                              Image.network(
+                                jenis.gambar,
+                                height: 35,
+                                width: 35,
+                              ),
+                              jenis.nama,
+                              jenis.deskripsi,
+                              // TODO: ontap
+                              onTap: () {},
+                            );
+                          }).toList(),
+                          // children: [
+                          //   _menuCard(
+                          //     context,
+                          //     SvgPicture.asset(
+                          //       'assets/images/icon_headphones.svg',
+                          //       width: 35,
+                          //       height: 35,
+                          //       color: AppColors.accent,
+                          //     ),
+                          //     "Listening",
+                          //     "200+ Audio",
+                          //     onTap: () =>
+                          //         _goTo(context, const ListeningPage()),
+                          //   ),
+                          //   _menuCard(
+                          //     context,
+                          //     SvgPicture.asset(
+                          //       'assets/images/icon_reading.svg',
+                          //       width: 35,
+                          //       height: 35,
+                          //       color: AppColors.accent,
+                          //     ),
+                          //     "Reading",
+                          //     "400+ Pertanyaan",
+                          //     onTap: () => _goTo(context, const ReadingPage()),
+                          //   ),
+                          //   _menuCard(
+                          //     context,
+                          //     SvgPicture.asset(
+                          //       'assets/images/icon_pen.svg',
+                          //       width: 35,
+                          //       height: 35,
+                          //       color: AppColors.accent,
+                          //     ),
+                          //     "Writing",
+                          //     "100+ Sampel",
+                          //     onTap: () => _goTo(context, const WritingPage()),
+                          //   ),
+                          //   _menuCard(
+                          //     context,
+                          //     SvgPicture.asset(
+                          //       'assets/images/icon_structure.svg',
+                          //       width: 35,
+                          //       height: 35,
+                          //       color: AppColors.accent,
+                          //     ),
+                          //     "Structure",
+                          //     "50+ Topik",
+                          //     onTap: () =>
+                          //         _goTo(context, const StructurePage()),
+                          //   ),
+                          // ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     const Text(
@@ -190,6 +235,7 @@ class HomePage extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
+                    // TODO: progress from history
                     ListView(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -252,7 +298,6 @@ class HomePage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(18),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(padding: const EdgeInsets.all(12), child: icon),
                 const SizedBox(height: 12),
@@ -268,11 +313,23 @@ class HomePage extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(color: Colors.black54, fontSize: 13),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _loadingMenuCard(BuildContext context) {
+    return Container(
+      width: (MediaQuery.of(context).size.width - 56) / 2,
+      height: (MediaQuery.of(context).size.width - 56) / 2,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
       ),
     );
   }

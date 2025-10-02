@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/auth/auth_check.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
+import 'package:toeflapp/view_models/materi_view_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ChangeNotifierProvider(create: (context) => MateriViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
