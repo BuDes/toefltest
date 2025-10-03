@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/auth/auth_check.dart';
+import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
 
@@ -37,7 +38,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TOEFL App',
-        theme: ThemeData(useMaterial3: true, fontFamily: "Poppins"),
+        theme: ThemeData(
+          useMaterial3: true,
+          fontFamily: "Poppins",
+          primaryColor: AppColors.primary,
+        ),
         home: const AuthCheck(),
       ),
     );

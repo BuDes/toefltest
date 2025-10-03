@@ -65,10 +65,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? _passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return "Password tidak boleh kosong";
+      return "Password cannot be empty";
     }
     if (_passwordController.text != _kPasswordController.text) {
-      return "Kedua password tidak sama";
+      return "Passwords are not the same";
     }
     return null;
   }

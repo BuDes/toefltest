@@ -71,9 +71,9 @@ class ProfilePage extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ).createShader(bounds);
                     },
-                    child: const Text(
-                      "User Name",
-                      style: TextStyle(
+                    child: Text(
+                      user.name,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors
@@ -82,9 +82,9 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    "userexample@email.com",
-                    style: TextStyle(color: Colors.black54),
+                  Text(
+                    user.email,
+                    style: const TextStyle(color: Colors.black54),
                   ),
                   const SizedBox(height: 8),
                   InkWell(
@@ -184,11 +184,11 @@ class ProfilePage extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black12,
             blurRadius: 10,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ],
         border: Border.all(

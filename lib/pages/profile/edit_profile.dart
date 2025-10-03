@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/pages/profile/change_password_page.dart';
+import 'package:toeflapp/pages/profile/profile_text_field.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
+import 'package:toeflapp/widgets/app_button.dart';
+import 'package:toeflapp/widgets/error_view.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -11,15 +17,56 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
+  late final AuthViewModel _authVM;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  // TODO: change password page
+  // final TextEditingController _passwordController = TextEditingController();
 
-  // contoh controller
-  final TextEditingController _nameController = TextEditingController(
-    text: "User Name",
-  );
-  final TextEditingController _emailController = TextEditingController(
-    text: "userexample@email.com",
-  );
-  final TextEditingController _passwordController = TextEditingController();
+  bool _loading = false;
+  String? _error;
+
+  void _submitEditProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final error = await _authVM.updateProfile(
+      name,
+      email,
+    );
+
+    if (error == null) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text("Profile updated successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      navigator.pop();
+    }
+
+    setState(() {
+      _loading = false;
+      _error = error;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _authVM = context.read<AuthViewModel>();
+    final user = _authVM.currentUser!;
+    _nameController.text = user.name;
+    _emailController.text = user.email;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,153 +85,67 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               // 🔹 Avatar dengan tombol ubah foto
               Center(
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage("assets/avatar.png"),
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.primary, AppColors.accent],
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Iconsax.camera,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.white,
+                    child: Icon(Iconsax.user, size: 50, color: Colors.black54),
+                  ),
                 ),
               ),
 
               const SizedBox(height: 24),
+              Center(child: ErrorView(error: _error)),
 
               // 🔹 Nama
-              TextFormField(
+              ProfileTextField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "Full Name",
-                  prefixIcon: const Icon(Iconsax.user),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary, // warna border default
-                      width: 1.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent, // 🎨 warna saat fokus
-                      width: 2,
-                    ),
-                  ),
-                ),
+                icon: Iconsax.user,
+                label: "Full Name",
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
-                validator: (value) =>
-                    value!.isEmpty ? "Name cannot be empty" : null,
               ),
 
               const SizedBox(height: 16),
 
               // 🔹 Email
-              TextFormField(
+              ProfileTextField(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: const Icon(Iconsax.sms),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary, // warna border default
-                      width: 1.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent, // 🎨 warna saat fokus
-                      width: 2,
-                    ),
-                  ),
-                ),
-                validator: (value) =>
-                    value!.isEmpty ? "Email cannot be empty" : null,
+                icon: Iconsax.sms,
+                label: "Email",
+                keyboardType: TextInputType.emailAddress,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
 
-              // 🔹 Password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: const Icon(Iconsax.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary, // warna border default
-                      width: 1.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent, // 🎨 warna saat fokus
-                      width: 2,
-                    ),
-                  ),
-                ),
+              // 🔹 Password Button
+              AppButton(
+                onPressed: _submitEditProfile,
+                icon: Iconsax.save_2,
+                label: "Save Changes",
+                loading: _loading,
               ),
-
-              const SizedBox(height: 24),
-
+              const SizedBox(height: 8),
               // 🔹 Save Button
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 4,
-                ),
+              AppButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // TODO: simpan ke backend / local storage
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Profile updated successfully!"),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                    Navigator.pop(context);
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChangePasswordPage(),
+                    ),
+                  );
                 },
-                icon: const Icon(Iconsax.save_2, color: Colors.white),
-                label: const Text(
-                  "Save Changes",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
+                icon: Iconsax.lock,
+                label: "Update Password",
+                loading: _loading,
               ),
             ],
           ),

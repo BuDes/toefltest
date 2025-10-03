@@ -28,7 +28,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   String? _defaultValiator(String? value) {
     if (value == null || value.isEmpty) {
-      return "${widget.hint} tidak boleh kosong";
+      return "${widget.hint} cannot be empty";
     }
     return null;
   }
@@ -61,8 +61,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
             ),
           ),
           if (widget.isPassword)
-            Align(
-              alignment: Alignment.centerRight,
+            Positioned(
+              right: 0,
+              top: 4,
               child: IconButton(
                 onPressed: () => setState(() => _show = !_show),
                 icon: Icon(

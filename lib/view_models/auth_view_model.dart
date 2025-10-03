@@ -105,6 +105,45 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
+  Future<String?> updateProfile(String name, String email) async {
+    try {
+      final response = await ApiService.putRequest(
+        "$_endpoint/profile",
+        body: jsonEncode({
+          "nama": name,
+          "email": email,
+        }),
+      );
+      if (response.statusCode < 300) {
+        final json = response.data;
+        _currentUser = User.fromJson(json);
+        notifyListeners();
+        return null;
+      }
+      return response.message;
+    } catch (e, stacktrace) {
+      log("Failed to update profile: $e", stackTrace: stacktrace);
+      return "Terjadi kesalahan";
+    }
+  }
+
+  Future<String?> updatePassword(String oldPassword, String newPassword) async {
+    try {
+      final response = await ApiService.putRequest(
+        "$_endpoint/update_password",
+        body: jsonEncode({
+          "passwordLama": oldPassword,
+          "passwordBaru": newPassword,
+        }),
+      );
+      if (response.statusCode < 300) return null;
+      return response.message;
+    } catch (e, stacktrace) {
+      log("Failed to update password: $e", stackTrace: stacktrace);
+      return "Terjadi kesalahan";
+    }
+  }
+
   Future _setToken(String? token, String? role) async {
     ApiService.token = token;
     ApiService.role = role;
