@@ -5,6 +5,7 @@ import 'package:toeflapp/pages/auth/auth_check.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
+import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => MateriViewModel()),
+        ChangeNotifierProvider(create: (context) => RiwayatViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

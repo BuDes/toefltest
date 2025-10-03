@@ -102,58 +102,6 @@ class _HomePageState extends State<HomePage> {
                               onTap: () {},
                             );
                           }).toList(),
-                          // children: [
-                          //   _menuCard(
-                          //     context,
-                          //     SvgPicture.asset(
-                          //       'assets/images/icon_headphones.svg',
-                          //       width: 35,
-                          //       height: 35,
-                          //       color: AppColors.accent,
-                          //     ),
-                          //     "Listening",
-                          //     "200+ Audio",
-                          //     onTap: () =>
-                          //         _goTo(context, const ListeningPage()),
-                          //   ),
-                          //   _menuCard(
-                          //     context,
-                          //     SvgPicture.asset(
-                          //       'assets/images/icon_reading.svg',
-                          //       width: 35,
-                          //       height: 35,
-                          //       color: AppColors.accent,
-                          //     ),
-                          //     "Reading",
-                          //     "400+ Pertanyaan",
-                          //     onTap: () => _goTo(context, const ReadingPage()),
-                          //   ),
-                          //   _menuCard(
-                          //     context,
-                          //     SvgPicture.asset(
-                          //       'assets/images/icon_pen.svg',
-                          //       width: 35,
-                          //       height: 35,
-                          //       color: AppColors.accent,
-                          //     ),
-                          //     "Writing",
-                          //     "100+ Sampel",
-                          //     onTap: () => _goTo(context, const WritingPage()),
-                          //   ),
-                          //   _menuCard(
-                          //     context,
-                          //     SvgPicture.asset(
-                          //       'assets/images/icon_structure.svg',
-                          //       width: 35,
-                          //       height: 35,
-                          //       color: AppColors.accent,
-                          //     ),
-                          //     "Structure",
-                          //     "50+ Topik",
-                          //     onTap: () =>
-                          //         _goTo(context, const StructurePage()),
-                          //   ),
-                          // ],
                         );
                       },
                     ),
@@ -227,41 +175,41 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Progress Belajar",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                    // TODO: progress from history
-                    ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.only(bottom: 20),
-                      children: [
-                        const SizedBox(height: 8),
+                    // IDEA: progress belajar
+                    // const Text(
+                    //   "Progress Belajar",
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.w700,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                    // ListView(
+                    //   shrinkWrap: true,
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   padding: const EdgeInsets.only(bottom: 20),
+                    //   children: [
+                    //     const SizedBox(height: 8),
 
-                        _progressTile("Reading", 0.3, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Listening", 0.8, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Writing", 0.4, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Structure", 0.6, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        const SizedBox(height: 50),
-                      ],
-                    ),
+                    //     _progressTile("Reading", 0.3, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Listening", 0.8, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Writing", 0.4, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Structure", 0.6, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     const SizedBox(height: 50),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

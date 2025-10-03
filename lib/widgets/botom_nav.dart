@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/chat/chat_page.dart';
 import 'package:toeflapp/pages/home_page.dart';
 import 'package:toeflapp/pages/profile/profile_page.dart';
 import 'package:toeflapp/pages/online_test/test_page.dart';
+import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -24,6 +26,12 @@ class _BottomNavState extends State<BottomNav> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    context.read<RiwayatViewModel>().getRiwayat();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true, // biar nav bar bisa floating di atas background
@@ -38,7 +46,7 @@ class _BottomNavState extends State<BottomNav> {
               currentIndex: _currentIndex,
               onTap: (index) => setState(() => _currentIndex = index),
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white.withOpacity(0.15),
+              backgroundColor: Colors.white12,
               selectedItemColor: const Color.fromARGB(255, 58, 80, 107),
               unselectedItemColor: const Color.fromARGB(255, 44, 69, 100),
               showUnselectedLabels: false,

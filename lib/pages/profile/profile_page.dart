@@ -5,6 +5,7 @@ import 'package:toeflapp/pages/auth/login_page.dart';
 import 'package:toeflapp/pages/profile/edit_profile.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
+import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -24,6 +25,10 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final user = context.watch<AuthViewModel>().currentUser!;
+    final riwayatVM = context.watch<RiwayatViewModel>();
+    final jlhMateri = riwayatVM.jlhMateri;
+    final jlhTest = riwayatVM.jlhTest;
+    final listRiwayat = riwayatVM.top3;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6), // 🌿 warna background global
@@ -119,19 +124,31 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 24),
 
           // 🔹 Progress Section
-          Text(
-            "Progress",
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 12),
+          // Text(
+          //   "Progress",
+          //   style: theme.textTheme.titleMedium?.copyWith(
+          //     color: AppColors.primary,
+          //     fontWeight: FontWeight.w700,
+          //   ),
+          // ),
+          // const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _progressCard("Materi", "12", Iconsax.book)),
+              Expanded(
+                child: _progressCard(
+                  "Materi",
+                  jlhMateri.toString(),
+                  Iconsax.book,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _progressCard("Test", "3", Iconsax.task_square)),
+              Expanded(
+                child: _progressCard(
+                  "Test",
+                  jlhTest.toString(),
+                  Iconsax.task_square,
+                ),
+              ),
             ],
           ),
 
@@ -146,10 +163,27 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _historyCard("Reading Test 1", "Score: 85", Iconsax.document_text),
-          _historyCard("Listening Test 2", "Score: 90", Iconsax.headphone),
-          _historyCard("Speaking Topic 5", "Completed", Iconsax.microphone),
+          if (listRiwayat.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                "Anda belum ada riwayat test atau pembelajaran",
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ...List.generate(listRiwayat.length, (index) {
+            final riwayat = listRiwayat[index];
+            return _historyCard(
+              riwayat.materi?.nama ?? riwayat.jadwal?.nama ?? "",
+              riwayat.tanggal,
+              riwayat.materi != null ? Iconsax.book : Iconsax.task_square,
+            );
+          }),
 
+          // _historyCard("Reading Test 1", "12:00", Iconsax.document_text),
+          // _historyCard("Listening Test 2", "02/10/2025", Iconsax.headphone),
+          // _historyCard("Speaking Topic 5", "01/10/2025", Iconsax.microphone),
           const SizedBox(height: 16),
 
           // 🔹 Logout
