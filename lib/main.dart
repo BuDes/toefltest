@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart'; // ✅ Tambahkan ini
 import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/auth/auth_check.dart';
 import 'package:toeflapp/theme/app_colors.dart';
@@ -7,8 +8,12 @@ import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Inisialisasi data lokal (contoh: Bahasa Indonesia)
+  await initializeDateFormatting('id_ID', null);
+
   // Aktifkan edge-to-edge mode biar nav bar gak hitam
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
@@ -16,9 +21,9 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent, // transparan beneran
+      systemNavigationBarColor: Colors.transparent,
       systemNavigationBarDividerColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark, // kalau background terang
+      statusBarIconBrightness: Brightness.dark,
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
