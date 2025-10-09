@@ -72,26 +72,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // FutureBuilder(
-                    //   future: _jenisFuture,
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState ==
-                    //         ConnectionState.waiting) {
-                    //       return Wrap(
-                    //         spacing: 16,
-                    //         runSpacing: 16,
-                    //         children: [
-                    //           _loadingMenuCard(context),
-                    //           _loadingMenuCard(context),
-                    //           _loadingMenuCard(context),
-                    //         ],
-                    //       );
-                    //     }
-                    //     final listJenis = context.read<MateriViewModel>().jenis;
                     FutureBuilder(
                       future: _jenisFuture,
                       builder: (context, snapshot) {
-                        // Dummy data untuk 4 materi utama
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: [
+                              _loadingMenuCard(context),
+                              _loadingMenuCard(context),
+                              _loadingMenuCard(context),
+                            ],
+                          );
+                        }
+                        //     final listJenis = context.read<MateriViewModel>().jenis;
                         final listJenis = [
                           {
                             'nama': 'Listening',
@@ -217,40 +213,40 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 16),
                     // IDEA: progress belajar
-                    const Text(
-                      "Progress Belajar",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                    ListView(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.only(bottom: 20),
-                      children: [
-                        const SizedBox(height: 8),
+                    // const Text(
+                    //   "Progress Belajar",
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.w700,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                    // ListView(
+                    //   shrinkWrap: true,
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   padding: const EdgeInsets.only(bottom: 20),
+                    //   children: [
+                    //     const SizedBox(height: 8),
 
-                        _progressTile("Reading", 0.3, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Listening", 0.8, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Writing", 0.4, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        _progressTile("Structure", 0.6, [
-                          AppColors.accent,
-                          const Color(0xffF5EFE6),
-                        ]),
-                        const SizedBox(height: 50),
-                      ],
-                    ),
+                    //     _progressTile("Reading", 0.3, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Listening", 0.8, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Writing", 0.4, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //     _progressTile("Structure", 0.6, [
+                    //       AppColors.accent,
+                    //       const Color(0xffF5EFE6),
+                    //     ]),
+                    //   ],
+                    // ),
+                    const SizedBox(height: 50),
                   ],
                 ),
               ),
@@ -312,16 +308,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget _loadingMenuCard(BuildContext context) {
-  //   return Container(
-  //     width: (MediaQuery.of(context).size.width - 56) / 2,
-  //     height: (MediaQuery.of(context).size.width - 56) / 2,
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(24),
-  //     ),
-  //   );
-  // }
+  Widget _loadingMenuCard(BuildContext context) {
+    return Container(
+      width: (MediaQuery.of(context).size.width - 56) / 2,
+      height: (MediaQuery.of(context).size.width - 56) / 2,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+      ),
+    );
+  }
 
   // 🔹 Progress Tile
   Widget _progressTile(String title, double value, List<Color> gradient) {

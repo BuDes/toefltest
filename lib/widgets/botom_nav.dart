@@ -6,6 +6,8 @@ import 'package:toeflapp/pages/chat/chat_page.dart';
 import 'package:toeflapp/pages/home_page.dart';
 import 'package:toeflapp/pages/profile/profile_page.dart';
 import 'package:toeflapp/pages/online_test/test_page.dart';
+import 'package:toeflapp/services/socket_service.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
 class BottomNav extends StatefulWidget {
@@ -17,6 +19,7 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int _currentIndex = 0;
+  final _socketService = SocketService();
 
   final List<Widget> _pages = const [
     HomePage(),
@@ -29,6 +32,8 @@ class _BottomNavState extends State<BottomNav> {
   void initState() {
     super.initState();
     context.read<RiwayatViewModel>().getRiwayat();
+    final id = context.read<AuthViewModel>().currentUser!.id;
+    _socketService.connect(id);
   }
 
   @override
