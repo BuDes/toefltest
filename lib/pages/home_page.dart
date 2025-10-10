@@ -1,10 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toeflapp/pages/materials/listening/listening_page.dart';
-import 'package:toeflapp/pages/materials/reading/reading_page.dart';
-import 'package:toeflapp/pages/materials/structure/structure_page.dart';
-import 'package:toeflapp/pages/materials/writing/writing_page.dart';
+import 'package:toeflapp/pages/materials/materi_page.dart';
 import 'package:toeflapp/pages/practice/practice_page.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
@@ -87,41 +84,41 @@ class _HomePageState extends State<HomePage> {
                             ],
                           );
                         }
-                        //     final listJenis = context.read<MateriViewModel>().jenis;
-                        final listJenis = [
-                          {
-                            'nama': 'Listening',
-                            'deskripsi':
-                                'Latih kemampuan mendengarkan percakapan.',
-                            'gambar':
-                                'https://cdn-icons-png.flaticon.com/512/2920/2920323.png',
-                            'page': const ListeningPage(),
-                          },
-                          {
-                            'nama': 'Reading',
-                            'deskripsi':
-                                'Tingkatkan pemahaman bacaan akademik.',
-                            'gambar':
-                                'https://cdn-icons-png.flaticon.com/512/2232/2232688.png',
-                            'page': const ReadingPage(),
-                          },
-                          {
-                            'nama': 'Writing',
-                            'deskripsi':
-                                'Asah kemampuan menulis esai dan struktur kalimat.',
-                            'gambar':
-                                'https://cdn-icons-png.flaticon.com/512/3131/3131607.png',
-                            'page': const WritingPage(),
-                          },
-                          {
-                            'nama': 'Structure',
-                            'deskripsi':
-                                'Pelajari tata bahasa dan pola kalimat TOEFL.',
-                            'gambar':
-                                'https://cdn-icons-png.flaticon.com/512/1995/1995574.png',
-                            'page': const StructurePage(),
-                          },
-                        ];
+                        final listJenis = context.read<MateriViewModel>().jenis;
+                        // final listJenis = [
+                        //   {
+                        //     'nama': 'Listening',
+                        //     'deskripsi':
+                        //         'Latih kemampuan mendengarkan percakapan.',
+                        //     'gambar':
+                        //         'https://cdn-icons-png.flaticon.com/512/2920/2920323.png',
+                        //     'page': const ListeningPage(),
+                        //   },
+                        //   {
+                        //     'nama': 'Reading',
+                        //     'deskripsi':
+                        //         'Tingkatkan pemahaman bacaan akademik.',
+                        //     'gambar':
+                        //         'https://cdn-icons-png.flaticon.com/512/2232/2232688.png',
+                        //     'page': const ReadingPage(),
+                        //   },
+                        //   {
+                        //     'nama': 'Writing',
+                        //     'deskripsi':
+                        //         'Asah kemampuan menulis esai dan struktur kalimat.',
+                        //     'gambar':
+                        //         'https://cdn-icons-png.flaticon.com/512/3131/3131607.png',
+                        //     'page': const WritingPage(),
+                        //   },
+                        //   {
+                        //     'nama': 'Structure',
+                        //     'deskripsi':
+                        //         'Pelajari tata bahasa dan pola kalimat TOEFL.',
+                        //     'gambar':
+                        //         'https://cdn-icons-png.flaticon.com/512/1995/1995574.png',
+                        //     'page': const StructurePage(),
+                        //   },
+                        // ];
                         return Wrap(
                           spacing: 16,
                           runSpacing: 16,
@@ -129,14 +126,18 @@ class _HomePageState extends State<HomePage> {
                             return _menuCard(
                               context,
                               Image.network(
-                                jenis['gambar'] as String,
+                                jenis.gambar,
                                 height: 35,
                                 width: 35,
                               ),
-                              jenis['nama'] as String,
-                              jenis['deskripsi'] as String,
-                              onTap: () =>
-                                  _goTo(context, jenis['page'] as Widget),
+                              jenis.nama,
+                              jenis.deskripsi,
+                              onTap: () {
+                                _goTo(
+                                  context,
+                                  MateriPage(jenis: jenis),
+                                );
+                              },
                             );
                           }).toList(),
                         );

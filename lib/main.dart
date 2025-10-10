@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'TOEFL App',
+        title: 'Berlingvo',
         theme: ThemeData(
           useMaterial3: true,
           fontFamily: "Poppins",
