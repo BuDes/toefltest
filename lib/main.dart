@@ -7,6 +7,7 @@ import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
+import 'package:toeflapp/view_models/test_view_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => MateriViewModel()),
         ChangeNotifierProvider(create: (context) => RiwayatViewModel()),
+        ChangeNotifierProvider(create: (context) => TestViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

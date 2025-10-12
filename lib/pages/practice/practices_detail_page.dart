@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/models/soal.dart';
+import 'package:toeflapp/models/test_section.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/materi_view_model.dart';
+import 'package:toeflapp/view_models/test_view_model.dart';
+import 'package:toeflapp/widgets/app_button.dart';
+import 'package:toeflapp/widgets/error_view.dart';
 import 'package:toeflapp/widgets/gradient_border.dart';
 
 const Color primaryBlue = AppColors.primary;
@@ -19,97 +26,43 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
   int _currentSection = 0;
   int _currentQuestion = 0;
   bool _isPlayingAudio = false;
+  bool _loading = false;
+  String? _error;
 
   // User answers disimpan di sini
-  final Map<String, dynamic> _userAnswers = {};
+  final Map<String, String?> _userAnswers = {};
 
-  final List<Map<String, dynamic>> _sections = [
-    {
-      "title": "Listening",
-      "questions": [
-        {
-          "question": "🎧 What is the main topic of the lecture?",
-          "options": [
-            "Climate Change",
-            "Quantum Physics",
-            "World War II",
-            "Renaissance Art",
-          ],
-          "answer": 0,
-        },
-        {
-          "question": "🎧 What does the speaker imply about global warming?",
-          "options": [
-            "It’s natural",
-            "It’s caused by humans",
-            "It’s a myth",
-            "It’s slowing down",
-          ],
-          "answer": 1,
-        },
-      ],
-    },
-    {
-      "title": "Reading",
-      "passage":
-          "Photosynthesis is a process used by plants to convert light energy into chemical energy. "
-          "This process is essential for life on Earth because it produces oxygen and forms the base of the food chain.",
-      "questions": [
-        {
-          "question":
-              "📖 The passage suggests that photosynthesis is essential because…",
-          "options": [
-            "It produces oxygen",
-            "It consumes oxygen",
-            "It destroys CO2",
-            "It creates fossils",
-          ],
-          "answer": 0,
-        },
-      ],
-    },
-    {
-      "title": "Structure",
-      "questions": [
-        {
-          "question": "📝 The committee has met and _______.",
-          "options": [
-            "they reached a decision",
-            "it has reached a decision",
-            "its decision was reached",
-            "it reached a decision",
-          ],
-          "answer": 1,
-        },
-        {
-          "question":
-              "📝 Not until a student has mastered algebra _______ the principles of geometry.",
-          "options": [
-            "he can begin to understand",
-            "can he begin to understand",
-            "he begins to understand",
-            "begins to understand",
-          ],
-          "answer": 1,
-        },
-      ],
-    },
-    {
-      "title": "Writing",
-      "questions": [
-        {
-          "question":
-              "✍️ Some people think technology improves life, others say it worsens it. Discuss both views.",
-          "options": [],
-          "answer": null,
-        },
-      ],
-    },
-  ];
+  List<TestSection> _sections = [];
+
+  void _startTest() async {
+    if (_loading) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    final testVM = context.read<TestViewModel>();
+    final sections = await testVM.getPracticeTest();
+    if (sections == null) {
+      setState(() {
+        _loading = false;
+        _error = "Terjadi Kesalahan";
+      });
+      return;
+    }
+    for (var section in sections) {
+      for (var soal in section.soal) {
+        _userAnswers[soal.id] = null;
+      }
+    }
+    setState(() {
+      _loading = false;
+      _sections = sections;
+      _isStarted = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final section = _sections[_currentSection];
     return Scaffold(
       backgroundColor: cream1,
       appBar: AppBar(
@@ -124,12 +77,15 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: !_isStarted ? _buildIntro() : _buildTestUI(section),
+      body: !_isStarted ? _buildIntro() : _buildTestUI(),
     );
   }
 
   /// 🔹 Intro
   Widget _buildIntro() {
+    final materiVM = context.read<MateriViewModel>();
+    final jlhBagian = materiVM.jenis.length;
+
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
@@ -163,23 +119,33 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: _infoCard(Iconsax.document, "Jumlah Bagian", "4 bagian"),
+              child: _infoCard(
+                Iconsax.document,
+                "Jumlah Bagian",
+                "$jlhBagian bagian",
+              ),
             ),
           ],
         ),
         const SizedBox(height: 28),
+        Center(child: ErrorView(error: _error)),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: primaryBlue,
+            backgroundColor: _loading
+                ? primaryBlue.withAlpha(125)
+                : primaryBlue,
             padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          onPressed: () => setState(() => _isStarted = true),
+          onPressed: _startTest,
           child: const Text(
             "Mulai Tes",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -187,8 +153,9 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
   }
 
   /// 🔹 Test UI
-  Widget _buildTestUI(Map<String, dynamic> section) {
-    final questions = List<Map<String, dynamic>>.from(section["questions"]);
+  Widget _buildTestUI() {
+    final section = _sections[_currentSection];
+    final questions = section.soal;
     final question = questions[_currentQuestion];
 
     return ListView(
@@ -203,7 +170,7 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
         ),
         const SizedBox(height: 20),
         Text(
-          "Section ${_currentSection + 1}: ${section["title"]}",
+          "Section ${_currentSection + 1}: ${section.nama}",
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -213,11 +180,10 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
         const SizedBox(height: 16),
 
         // 🔹 Content per Section
-        if (section["title"] == "Listening") _buildListening(question),
-        if (section["title"] == "Reading") _buildReading(section, question),
-        if (section["title"] == "Structure") _buildStructure(question),
-        if (section["title"] == "Writing") _buildWriting(question),
+        _buildSoal(question),
 
+        // if (section["title"] == "Reading") _buildReading(section, question),
+        // if (section["title"] == "Structure") _buildStructure(question),
         const SizedBox(height: 28),
         _buildNavButtons(questions),
       ],
@@ -225,154 +191,128 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
   }
 
   /// 🔹 Listening Section
-  Widget _buildListening(Map<String, dynamic> question) {
+  Widget _buildSoal(Soal question) {
     return GradientBorderContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // audio player dummy
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
-                  size: 36,
-                  color: primaryBlue,
-                ),
-                onPressed: () =>
-                    setState(() => _isPlayingAudio = !_isPlayingAudio),
-              ),
-              Expanded(
-                child: Slider(
-                  value: _isPlayingAudio ? 0.5 : 0.0,
-                  onChanged: (_) {},
-                  activeColor: primaryBlue,
-                  inactiveColor: Colors.grey.shade300,
-                ),
-              ),
-            ],
-          ),
+          // TODO: build audio if available
+          _buildAudioPlayer(),
           const SizedBox(height: 12),
           Text(
-            question["question"],
+            question.pertanyaan,
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
 
           const SizedBox(height: 12),
-          ...List.generate(question["options"].length, (i) {
+          ...List.generate(question.opsi.length, (index) {
+            final opsi = question.opsi[index];
             return RadioListTile(
-              value: i,
-              groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
-              onChanged: (val) => setState(
-                () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
-              ),
-              title: Text(question["options"][i]),
+              value: opsi.id,
+              groupValue: _userAnswers[question.id],
+              onChanged: (val) => setState(() {
+                _userAnswers[question.id] = opsi.id;
+              }),
+              title: Text(question.opsi[index].isi),
               activeColor: primaryBlue,
             );
           }),
         ],
       ),
+    );
+  }
+
+  Widget _buildAudioPlayer() {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
+            size: 36,
+            color: primaryBlue,
+          ),
+          onPressed: () => setState(() => _isPlayingAudio = !_isPlayingAudio),
+        ),
+        Expanded(
+          child: Slider(
+            value: _isPlayingAudio ? 0.5 : 0.0,
+            onChanged: (_) {},
+            activeColor: primaryBlue,
+            inactiveColor: Colors.grey.shade300,
+          ),
+        ),
+      ],
     );
   }
 
   /// 🔹 Reading Section
-  Widget _buildReading(
-    Map<String, dynamic> section,
-    Map<String, dynamic> question,
-  ) {
-    return GradientBorderContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            section["passage"],
-            style: const TextStyle(
-              fontSize: 13,
-              height: 1.4,
-              color: Colors.black87,
-            ),
-          ),
-          const Divider(height: 24, thickness: 1),
-          Text(
-            question["question"],
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 12),
-          ...List.generate(question["options"].length, (i) {
-            return RadioListTile(
-              value: i,
-              groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
-              onChanged: (val) => setState(
-                () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
-              ),
-              title: Text(question["options"][i]),
-              activeColor: primaryBlue,
-            );
-          }),
-        ],
-      ),
-    );
-  }
+  // Widget _buildReading(
+  //   Map<String, dynamic> section,
+  //   Map<String, dynamic> question,
+  // ) {
+  //   return GradientBorderContainer(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           section["passage"],
+  //           style: const TextStyle(
+  //             fontSize: 13,
+  //             height: 1.4,
+  //             color: Colors.black87,
+  //           ),
+  //         ),
+  //         const Divider(height: 24, thickness: 1),
+  //         Text(
+  //           question["question"],
+  //           style: const TextStyle(fontWeight: FontWeight.w500),
+  //         ),
+  //         const SizedBox(height: 12),
+  //         ...List.generate(question["options"].length, (i) {
+  //           return RadioListTile(
+  //             value: i,
+  //             groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
+  //             onChanged: (val) => setState(
+  //               () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
+  //             ),
+  //             title: Text(question["options"][i]),
+  //             activeColor: primaryBlue,
+  //           );
+  //         }),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  /// 🔹 structure Section
-  Widget _buildStructure(Map<String, dynamic> question) {
-    return GradientBorderContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            question["question"],
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 12),
-          ...List.generate(question["options"].length, (i) {
-            return RadioListTile(
-              value: i,
-              groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
-              onChanged: (val) => setState(
-                () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
-              ),
-              title: Text(question["options"][i]),
-              activeColor: primaryBlue,
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  /// 🔹 Writing Section
-  Widget _buildWriting(Map<String, dynamic> question) {
-    return GradientBorderContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            question["question"],
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            maxLines: 6,
-            decoration: InputDecoration(
-              hintText: "Write your essay here...",
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-            ),
-            onChanged: (val) =>
-                _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
-          ),
-        ],
-      ),
-    );
-  }
+  // /// 🔹 structure Section
+  // Widget _buildStructure(Map<String, dynamic> question) {
+  //   return GradientBorderContainer(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           question["question"],
+  //           style: const TextStyle(fontWeight: FontWeight.w500),
+  //         ),
+  //         const SizedBox(height: 12),
+  //         ...List.generate(question["options"].length, (i) {
+  //           return RadioListTile(
+  //             value: i,
+  //             groupValue: _userAnswers["Q$_currentSection-$_currentQuestion"],
+  //             onChanged: (val) => setState(
+  //               () => _userAnswers["Q$_currentSection-$_currentQuestion"] = val,
+  //             ),
+  //             title: Text(question["options"][i]),
+  //             activeColor: primaryBlue,
+  //           );
+  //         }),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// 🔹 Navigation Buttons
-  Widget _buildNavButtons(List<Map<String, dynamic>> questions) {
+  Widget _buildNavButtons(List<Soal> questions) {
     return Row(
       children: [
         if (_currentSection > 0 || _currentQuestion > 0)
@@ -437,8 +377,8 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
 
   /// 🔹 Navigation Logic
   void _goNext() {
-    final questions = List<Map<String, dynamic>>.from(
-      _sections[_currentSection]["questions"],
+    final questions = List<Soal>.from(
+      _sections[_currentSection].soal,
     );
     if (_currentQuestion < questions.length - 1) {
       setState(() => _currentQuestion++);
@@ -459,30 +399,122 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
       setState(() {
         _currentSection--;
         _currentQuestion =
-            List<Map<String, dynamic>>.from(
-              _sections[_currentSection]["questions"],
+            List<Soal>.from(
+              _sections[_currentSection].soal,
             ).length -
             1;
       });
     }
   }
 
-  void _showFinishDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Test Completed 🎉"),
-        content: const Text(
-          "You have finished the practice test.\n\nResults will appear in the next page.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("OK", style: TextStyle(color: primaryBlue)),
+  void _showFinishDialog() async {
+    showPopup({required Function() builder}) {
+      return showDialog(context: context, builder: (_) => builder());
+    }
+
+    final confirm = await showPopup(
+      builder: () => _ConfirmationPopup(userAnswers: _userAnswers),
+    );
+    if (confirm != true) return;
+
+    showPopup(
+      builder: () {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
+          title: const Text("Test Completed 🎉"),
+          content: const Text(
+            "You have finished the practice test",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text("OK", style: TextStyle(color: primaryBlue)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ConfirmationPopup extends StatefulWidget {
+  const _ConfirmationPopup({required this.userAnswers});
+
+  final Map<String, String?> userAnswers;
+
+  @override
+  State<_ConfirmationPopup> createState() => _ConfirmationPopupState();
+}
+
+class _ConfirmationPopupState extends State<_ConfirmationPopup> {
+  bool _loading = false;
+  String? _error;
+
+  void _submitAnswers() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    final testVM = context.read<TestViewModel>();
+    final navigator = Navigator.of(context);
+    final error = await testVM.submitAnswers(widget.userAnswers);
+
+    if (error == null) {
+      navigator.pop(true);
+      return;
+    }
+
+    setState(() {
+      _loading = false;
+      _error = error;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final unfinished = widget.userAnswers.values.contains(null);
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        unfinished ? "Questions not anwsered" : "Submit Answers?",
+        textAlign: TextAlign.center,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ErrorView(error: _error),
+          Text(
+            unfinished
+                ? "There are questions that you haven't answered, do you want to continue?"
+                : "Are you sure double checked and want to submit the answers?",
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            "Cancel",
+            style: TextStyle(color: primaryBlue),
+          ),
+        ),
+        AppButton(
+          onPressed: _submitAnswers,
+          label: "Continue",
+          loading: _loading,
+        ),
+      ],
     );
   }
 }

@@ -321,62 +321,62 @@ class _HomePageState extends State<HomePage> {
   }
 
   // 🔹 Progress Tile
-  Widget _progressTile(String title, double value, List<Color> gradient) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                '${(value * 100).toInt()}%',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            height: 12,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeInOut,
-                    width: constraints.maxWidth * value,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradient,
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _progressTile(String title, double value, List<Color> gradient) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 18),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               title,
+  //               style: const TextStyle(
+  //                 fontWeight: FontWeight.w600,
+  //                 fontSize: 15,
+  //                 color: Colors.white,
+  //               ),
+  //             ),
+  //             Text(
+  //               '${(value * 100).toInt()}%',
+  //               style: const TextStyle(
+  //                 fontWeight: FontWeight.w600,
+  //                 fontSize: 15,
+  //                 color: Colors.white,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 8),
+  //         Container(
+  //           height: 12,
+  //           decoration: BoxDecoration(
+  //             color: Colors.grey.shade300,
+  //             borderRadius: BorderRadius.circular(12),
+  //           ),
+  //           child: LayoutBuilder(
+  //             builder: (context, constraints) {
+  //               return ClipRRect(
+  //                 borderRadius: BorderRadius.circular(12),
+  //                 child: AnimatedContainer(
+  //                   duration: const Duration(milliseconds: 600),
+  //                   curve: Curves.easeInOut,
+  //                   width: constraints.maxWidth * value,
+  //                   decoration: BoxDecoration(
+  //                     gradient: LinearGradient(
+  //                       colors: gradient,
+  //                       begin: Alignment.centerLeft,
+  //                       end: Alignment.centerRight,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

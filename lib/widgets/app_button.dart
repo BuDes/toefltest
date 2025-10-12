@@ -5,13 +5,13 @@ class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
     required this.onPressed,
-    required this.icon,
+    this.icon,
     required this.label,
     required this.loading,
   });
 
   final void Function() onPressed;
-  final IconData icon;
+  final IconData? icon;
   final String label;
   final bool loading;
 
@@ -19,17 +19,18 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
+        minimumSize: const Size(100, 0),
         backgroundColor: loading
             ? AppColors.primary.withAlpha(125)
             : AppColors.primary,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         elevation: 4,
       ),
       onPressed: loading ? () {} : onPressed,
-      icon: Icon(icon, color: Colors.white),
+      icon: icon != null ? Icon(icon, color: Colors.white) : null,
       label: Text(
         label,
         style: const TextStyle(fontSize: 16, color: Colors.white),

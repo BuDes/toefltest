@@ -29,10 +29,13 @@ class Riwayat {
   }
 
   factory Riwayat.fromJson(Map<String, dynamic> json) {
+    final materi = json["materi"];
+    final jadwal = json["jadwal_test"];
+
     return Riwayat(
       id: json["id"],
-      materi: Materi.fromJson(json["materi"]),
-      jadwal: Jadwal.fromJson(json["jadwal_test"]),
+      materi: materi != null ? Materi.fromJson(materi) : null,
+      jadwal: jadwal != null ? Jadwal.fromJson(jadwal) : null,
     );
   }
 }

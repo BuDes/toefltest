@@ -1,51 +1,56 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/models/hasil_jawaban.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/test_view_model.dart';
 
 const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 
-class PracticeTestResultPage extends StatelessWidget {
-  final dynamic practice; // expect fields: title, percentCorrect, isNew
+class PracticeTestResultPage extends StatefulWidget {
+  const PracticeTestResultPage({super.key});
 
-  const PracticeTestResultPage({super.key, this.practice});
+  @override
+  State<PracticeTestResultPage> createState() => _PracticeTestResultPageState();
+}
+
+class _PracticeTestResultPageState extends State<PracticeTestResultPage> {
+  List<HasilJawaban> _results = [];
+
+  void _loadResults() async {
+    final testVM = context.read<TestViewModel>();
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final results = await testVM.hasilPracticeTest();
+    if (results == null) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text("Terjadi kesalahan"),
+          backgroundColor: Colors.grey,
+        ),
+      );
+      navigator.pop();
+      return;
+    }
+    setState(() => _results = results);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadResults();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // 🔹 Dummy hasil soal
-    final List<Map<String, dynamic>> results = [
-      {
-        "question": "What is the capital of France?",
-        "options": ["Berlin", "Paris", "Madrid", "Rome"],
-        "correctIndex": 1,
-        "userIndex": 0,
-      },
-      {
-        "question": "Which planet is known as the Red Planet?",
-        "options": ["Earth", "Venus", "Mars", "Jupiter"],
-        "correctIndex": 2,
-        "userIndex": 2,
-      },
-      {
-        "question": "TOEFL is mainly used for?",
-        "options": [
-          "Measuring English proficiency",
-          "Learning programming",
-          "Testing math skills",
-          "Fitness training",
-        ],
-        "correctIndex": 0,
-        "userIndex": 3,
-      },
-    ];
-
     // 🔹 Hitung skor
-    final totalQuestions = results.length;
-    final correctAnswers = results
-        .where((q) => q["correctIndex"] == q["userIndex"])
-        .length;
-
-    final double percent = (correctAnswers / totalQuestions) * 100;
+    final totalQuestions = _results.length;
+    final correctAnswers = _results.where((r) => r.isBenar).length;
+    double percent = (correctAnswers / totalQuestions) * 100;
+    if (totalQuestions == 0) percent = 0;
 
     return Scaffold(
       backgroundColor: cream1,
@@ -147,7 +152,7 @@ class PracticeTestResultPage extends StatelessWidget {
                           ),
                           _scoreItem(
                             "Skor",
-                            "${((correctAnswers / totalQuestions) * 100).toStringAsFixed(0)}%",
+                            "${percent.toStringAsFixed(0)}%",
                           ),
                         ],
                       ),
@@ -167,16 +172,9 @@ class PracticeTestResultPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                ...results.asMap().entries.map((entry) {
-                  final index = entry.key;
+                ..._results.asMap().entries.map((entry) {
                   final data = entry.value;
-                  return _questionCard(
-                    index: index,
-                    question: data["question"],
-                    options: List<String>.from(data["options"]),
-                    correctIndex: data["correctIndex"],
-                    userIndex: data["userIndex"],
-                  );
+                  return _questionCard(data);
                 }),
               ],
             ),
@@ -202,13 +200,7 @@ class PracticeTestResultPage extends StatelessWidget {
     );
   }
 
-  Widget _questionCard({
-    required int index,
-    required String question,
-    required List<String> options,
-    required int correctIndex,
-    required int userIndex,
-  }) {
+  Widget _questionCard(HasilJawaban data) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -222,7 +214,7 @@ class PracticeTestResultPage extends StatelessWidget {
         children: [
           // 🔹 Pertanyaan
           Text(
-            "Q${index + 1}. $question",
+            data.pertanyaan,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.black87,
@@ -230,17 +222,17 @@ class PracticeTestResultPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // 🔹 Pilihan
-          ...options.asMap().entries.map((entry) {
-            final i = entry.key;
-            final option = entry.value;
-            final isCorrect = i == correctIndex;
-            final isUserChoice = i == userIndex;
+          ...List.generate(data.opsi.length, (index) {
+            final opsi = data.opsi[index];
+            final isCorrect = opsi.id == data.idOpsiBenar;
+            final isUserChoice = opsi.id == data.idOpsi;
 
             Color bgColor = Colors.white;
             IconData? icon;
 
-            if (isUserChoice && isCorrect) {
+            if (data.idOpsi == null && isCorrect) {
+              bgColor = Colors.orange.withOpacity(0.05);
+            } else if (isUserChoice && isCorrect) {
               bgColor = Colors.green.withOpacity(0.1);
               icon = Icons.check_circle;
             } else if (isUserChoice && !isCorrect) {
@@ -259,14 +251,16 @@ class PracticeTestResultPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isCorrect
-                      ? Colors.green
+                      ? data.idOpsi != null
+                            ? Colors.green
+                            : Colors.orange
                       : (isUserChoice ? Colors.red : Colors.grey.shade300),
                 ),
               ),
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(option, style: const TextStyle(fontSize: 14)),
+                    child: Text(opsi.isi, style: const TextStyle(fontSize: 14)),
                   ),
                   if (icon != null)
                     Icon(
