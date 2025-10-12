@@ -18,6 +18,21 @@ class MateriContentPage extends StatelessWidget {
     );
   }
 
+  // Method untuk build video URL
+  String _buildVideoUrl(String? videoFilename) {
+    if (videoFilename == null || videoFilename.isEmpty) {
+      return '';
+    }
+
+    // Cek apakah sudah URL lengkap
+    if (videoFilename.startsWith('http')) {
+      return videoFilename;
+    }
+
+    // Kalau cuma nama file, baru tambahkan prefix
+    return 'http://10.154.29.180:3000/video/$videoFilename';
+  }
+
   @override
   Widget build(BuildContext context) {
     final materiVM = context.read<MateriViewModel>();
@@ -34,36 +49,40 @@ class MateriContentPage extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 32),
         child: Column(
           children: [
-            if (materi.videoFile != null) const MateriVideoPlayer(),
+            if (materi.videoFile != null && materi.videoFile!.isNotEmpty)
+              MateriVideoPlayer(
+                videoUrl: _buildVideoUrl(materi.videoFile),
+              ),
             Padding(
               padding: const EdgeInsets.all(24),
               child: Text(materi.content ?? ""),
             ),
             if (nextMateri != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MaterialButton(
-                    onPressed: () => _nextMateri(context, nextMateri),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(8),
-                    ),
-                    color: AppColors.primary,
-                    disabledColor: AppColors.primary.withAlpha(125),
-                    child: const Text(
-                      "Materi Beirkutnya",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    MaterialButton(
+                      onPressed: () => _nextMateri(context, nextMateri),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 24,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      color: AppColors.primary,
+                      child: const Text(
+                        "Materi Berikutnya",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 24),
-                ],
+                  ],
+                ),
               ),
           ],
         ),
