@@ -2,7 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/models/jadwal.dart';
+import 'package:toeflapp/models/soal.dart';
+import 'package:toeflapp/models/test_section.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/utils/app_constants.dart';
+import 'package:toeflapp/view_models/riwayat_view_model.dart';
+import 'package:toeflapp/view_models/test_view_model.dart';
 
 // --- Reusable Widgets (Tidak ada perubahan di sini) ---
 class AppIcon extends StatelessWidget {
@@ -58,105 +65,105 @@ class SectionHeader extends StatelessWidget {
 }
 
 // --- MOCK DATA (Tidak ada perubahan) ---
-enum TestSection { reading, listening, writing, structure }
+// enum TestSection { reading, listening, writing, structure }
 
-class Question {
-  final String id;
-  final String text;
-  final List<String> options;
-  final int correctAnswerIndex;
+// class Question {
+//   final String id;
+//   final String text;
+//   final List<String> options;
+//   final int correctAnswerIndex;
 
-  Question({
-    required this.id,
-    required this.text,
-    required this.options,
-    required this.correctAnswerIndex,
-  });
-}
+//   Question({
+//     required this.id,
+//     required this.text,
+//     required this.options,
+//     required this.correctAnswerIndex,
+//   });
+// }
 
-class MockData {
-  static final Map<TestSection, List<Question>> questions = {
-    TestSection.reading: [
-      Question(
-        id: 'r_1',
-        text: 'What is the main topic of the first paragraph?',
-        options: [
-          'History of solar power',
-          'Benefits of renewable energy',
-          'Challenges of wind energy',
-          'Global climate change',
-        ],
-        correctAnswerIndex: 1,
-      ),
-      Question(
-        id: 'r_2',
-        text:
-            'According to the text, which country is a leader in solar energy production?',
-        options: ['United States', 'China', 'Germany', 'Australia'],
-        correctAnswerIndex: 2,
-      ),
-    ],
-    TestSection.listening: [
-      Question(
-        id: 'l_1',
-        text: 'What is the speaker\'s opinion on the new library policy?',
-        options: [
-          'They are in favor of it',
-          'They are against it',
-          'They are indifferent',
-          'They do not mention it',
-        ],
-        correctAnswerIndex: 0,
-      ),
-      Question(
-        id: 'l_2',
-        text: 'What time is the meeting scheduled?',
-        options: ['9:00 AM', '10:30 AM', '1:00 PM', '2:00 PM'],
-        correctAnswerIndex: 3,
-      ),
-    ],
-    TestSection.writing: [
-      Question(
-        id: 'w_1',
-        text: 'Write an essay discussing the pros and cons of remote work.',
-        options: [],
-        correctAnswerIndex: -1,
-      ),
-    ],
-    TestSection.structure: [
-      Question(
-        id: 'st_1',
-        text: 'The committee has met and _______.',
-        options: [
-          'they reached a decision',
-          'it has reached a decision',
-          'its decision was reached',
-          'it reached a decision',
-        ],
-        correctAnswerIndex: 1,
-      ),
-      Question(
-        id: 'st_2',
-        text:
-            'Not until a student has mastered algebra _______ the principles of geometry.',
-        options: [
-          'he can begin to understand',
-          'can he begin to understand',
-          'he begins to understand',
-          'begins to understand',
-        ],
-        correctAnswerIndex: 1,
-      ),
-    ],
-  };
-}
+// class MockData {
+//   static final Map<TestSection, List<Question>> questions = {
+//     TestSection.reading: [
+//       Question(
+//         id: 'r_1',
+//         text: 'What is the main topic of the first paragraph?',
+//         options: [
+//           'History of solar power',
+//           'Benefits of renewable energy',
+//           'Challenges of wind energy',
+//           'Global climate change',
+//         ],
+//         correctAnswerIndex: 1,
+//       ),
+//       Question(
+//         id: 'r_2',
+//         text:
+//             'According to the text, which country is a leader in solar energy production?',
+//         options: ['United States', 'China', 'Germany', 'Australia'],
+//         correctAnswerIndex: 2,
+//       ),
+//     ],
+//     TestSection.listening: [
+//       Question(
+//         id: 'l_1',
+//         text: 'What is the speaker\'s opinion on the new library policy?',
+//         options: [
+//           'They are in favor of it',
+//           'They are against it',
+//           'They are indifferent',
+//           'They do not mention it',
+//         ],
+//         correctAnswerIndex: 0,
+//       ),
+//       Question(
+//         id: 'l_2',
+//         text: 'What time is the meeting scheduled?',
+//         options: ['9:00 AM', '10:30 AM', '1:00 PM', '2:00 PM'],
+//         correctAnswerIndex: 3,
+//       ),
+//     ],
+//     TestSection.writing: [
+//       Question(
+//         id: 'w_1',
+//         text: 'Write an essay discussing the pros and cons of remote work.',
+//         options: [],
+//         correctAnswerIndex: -1,
+//       ),
+//     ],
+//     TestSection.structure: [
+//       Question(
+//         id: 'st_1',
+//         text: 'The committee has met and _______.',
+//         options: [
+//           'they reached a decision',
+//           'it has reached a decision',
+//           'its decision was reached',
+//           'it reached a decision',
+//         ],
+//         correctAnswerIndex: 1,
+//       ),
+//       Question(
+//         id: 'st_2',
+//         text:
+//             'Not until a student has mastered algebra _______ the principles of geometry.',
+//         options: [
+//           'he can begin to understand',
+//           'can he begin to understand',
+//           'he begins to understand',
+//           'begins to understand',
+//         ],
+//         correctAnswerIndex: 1,
+//       ),
+//     ],
+//   };
+// }
 
 // --- PAGES & WIDGETS (Tidak ada perubahan)---
 
 class TestDetailPage extends StatelessWidget {
-  final String testTitle;
+  final Jadwal jadwal;
 
-  const TestDetailPage({super.key, required this.testTitle});
+  const TestDetailPage({super.key, required this.jadwal});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +171,7 @@ class TestDetailPage extends StatelessWidget {
       backgroundColor: const Color(0xffF5EFE6),
       appBar: AppBar(
         title: Text(
-          testTitle,
+          jadwal.nama,
           style: const TextStyle(
             color: AppColors.primary,
             fontSize: 20,
@@ -232,8 +239,9 @@ class TestDetailPage extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
-                        TestPreparationPage(testTitle: testTitle),
+                    builder: (context) {
+                      return TestPreparationPage(jadwal: jadwal);
+                    },
                   ),
                 );
               },
@@ -308,9 +316,29 @@ class TestDetailPage extends StatelessWidget {
 // --- TEST PREPARATION PAGE ---
 
 class TestPreparationPage extends StatelessWidget {
-  final String testTitle;
+  final Jadwal jadwal;
 
-  const TestPreparationPage({super.key, required this.testTitle});
+  const TestPreparationPage({
+    super.key,
+    required this.jadwal,
+  });
+
+  void _startTest(BuildContext context) async {
+    final testVM = context.read<TestViewModel>();
+    final navigator = Navigator.of(context);
+    final sections = await testVM.getRealTest();
+    if (sections == null) return;
+    navigator.push(
+      MaterialPageRoute(
+        builder: (context) {
+          return TestPageContainer(
+            jadwal: jadwal,
+            sections: sections,
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -369,14 +397,7 @@ class TestPreparationPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          TestPageContainer(testTitle: testTitle),
-                    ),
-                  );
-                },
+                onPressed: () => _startTest(context),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: AppColors.accent,
@@ -456,9 +477,14 @@ class TestPreparationPage extends StatelessWidget {
 
 // --- MAIN TEST CONTAINER (Tidak ada perubahan) ---
 class TestPageContainer extends StatefulWidget {
-  final String testTitle;
+  final Jadwal jadwal;
+  final List<TestSection> sections;
 
-  const TestPageContainer({super.key, required this.testTitle});
+  const TestPageContainer({
+    super.key,
+    required this.sections,
+    required this.jadwal,
+  });
 
   @override
   State<TestPageContainer> createState() => _TestPageContainerState();
@@ -467,27 +493,21 @@ class TestPageContainer extends StatefulWidget {
 class _TestPageContainerState extends State<TestPageContainer> {
   final PageController _pageController = PageController();
   int _currentSectionIndex = 0;
-  final List<TestSection> _sections = [
-    TestSection.reading,
-    TestSection.listening,
-    TestSection.writing,
-    TestSection.structure,
-  ];
 
   late Timer _timer;
-  int _start = 900;
+  int _start = AppConstants.testSectionDuration.inSeconds;
 
-  final Map<TestSection, int> _sectionDurations = {
-    TestSection.reading: 900,
-    TestSection.listening: 900,
-    TestSection.writing: 1200,
-    TestSection.structure: 900,
-  };
+  // final Map<TestSection, int> _sectionDurations = {
+  //   TestSection.reading: 900,
+  //   TestSection.listening: 900,
+  //   TestSection.writing: 1200,
+  //   TestSection.structure: 900,
+  // };
 
   @override
   void initState() {
     super.initState();
-    _start = _sectionDurations[_sections[_currentSectionIndex]] ?? 0;
+    // _start = _sectionDurations[_sections[_currentSectionIndex]] ?? 0;
     _startTimer();
   }
 
@@ -519,22 +539,21 @@ class _TestPageContainerState extends State<TestPageContainer> {
 
   String _formatTime(int seconds) {
     final minutes = seconds ~/ 60;
+    final hours = minutes ~/ 60;
     final remainingSeconds = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    final remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+      return '$hours:${remainingMinutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    }
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   String _getSectionTitle(TestSection section) {
-    switch (section) {
-      case TestSection.reading:
-        return "Reading Section";
-      case TestSection.listening:
-        return "Listening Section";
-      case TestSection.writing:
-        return "Writing Section";
-      case TestSection.structure:
-        return "Structure Section";
-    }
+    return section.nama;
   }
+
+  List<TestSection> get _sections => widget.sections;
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +561,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
       backgroundColor: const Color(0xffF5EFE6),
       appBar: AppBar(
         title: Text(
-          widget.testTitle,
+          widget.jadwal.nama,
           style: const TextStyle(color: AppColors.primary),
         ),
         backgroundColor: Colors.transparent,
@@ -620,7 +639,7 @@ class _TestPageContainerState extends State<TestPageContainer> {
               onPageChanged: (index) {
                 setState(() {
                   _currentSectionIndex = index;
-                  _start = _sectionDurations[_sections[index]] ?? 0;
+                  _start = AppConstants.testSectionDuration.inSeconds;
                   _timer.cancel();
                   _startTimer();
                 });
@@ -629,6 +648,14 @@ class _TestPageContainerState extends State<TestPageContainer> {
                 final section = _sections[index];
                 return TestSectionWidget(
                   section: section,
+                  isFirst: _currentSectionIndex == 0,
+                  isLast: _currentSectionIndex + 1 == _sections.length,
+                  onBack: () {
+                    _pageController.previousPage(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeIn,
+                    );
+                  },
                   onNext: () {
                     if (_currentSectionIndex < _sections.length - 1) {
                       _pageController.nextPage(
@@ -648,55 +675,117 @@ class _TestPageContainerState extends State<TestPageContainer> {
     );
   }
 
-  void _showCompletionDialog(BuildContext context) {
+  void _showCompletionDialog(BuildContext context) async {
+    final navigator = Navigator.of(context);
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: const Color(0xffF5EFE6),
-          title: const Text(
-            "Test Selesai!",
-            textAlign: TextAlign.center,
-            style: TextStyle(
+      builder: (_) => _CompletionDialog(idJadwal: widget.jadwal.id),
+    ).then((_) {
+      navigator.pop();
+      navigator.pop();
+      navigator.pop();
+    });
+  }
+}
+
+class _CompletionDialog extends StatefulWidget {
+  const _CompletionDialog({required this.idJadwal});
+  final String idJadwal;
+
+  @override
+  State<_CompletionDialog> createState() => _CompletionDialogState();
+}
+
+class _CompletionDialogState extends State<_CompletionDialog> {
+  bool _loading = true;
+
+  void _submitAnswers() async {
+    final testVM = context.read<TestViewModel>();
+    final riwayatVM = context.read<RiwayatViewModel>();
+    final answers = testVM.currentAnswers!;
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final error = await testVM.submitAnswers(
+      answers,
+      idJadwal: widget.idJadwal,
+    );
+    if (error != null) {
+      navigator.pop();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(error),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    setState(() => _loading = false);
+    riwayatVM.getRiwayat();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _submitAnswers();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(
               color: AppColors.primary,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      backgroundColor: const Color(0xffF5EFE6),
+      title: const Text(
+        "Test Selesai!",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset('assets/images/trophy.svg', height: 80),
+          const SizedBox(height: 16),
+          const Text(
+            "Selamat, Anda telah menyelesaikan test ini. Hasil akan tersedia di halaman profil Anda.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, color: Colors.black54),
+          ),
+        ],
+      ),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            "Kembali ke Daftar Test",
+            style: TextStyle(
+              color: AppColors.accent,
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset('assets/images/trophy.svg', height: 80),
-              const SizedBox(height: 16),
-              const Text(
-                "Selamat, Anda telah menyelesaikan test ini. Hasil akan tersedia di halaman profil Anda.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black54),
-              ),
-            ],
-          ),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                "Kembali ke Daftar Test",
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+        ),
+      ],
     );
   }
 }
@@ -705,11 +794,17 @@ class _TestPageContainerState extends State<TestPageContainer> {
 class TestSectionWidget extends StatefulWidget {
   final TestSection section;
   final VoidCallback onNext;
+  final VoidCallback onBack;
+  final bool isFirst;
+  final bool isLast;
 
   const TestSectionWidget({
     super.key,
     required this.section,
     required this.onNext,
+    required this.onBack,
+    required this.isFirst,
+    required this.isLast,
   });
 
   @override
@@ -717,62 +812,72 @@ class TestSectionWidget extends StatefulWidget {
 }
 
 class _TestSectionWidgetState extends State<TestSectionWidget> {
-  final Map<String, int?> _selectedAnswers = {};
+  final Map<String, String?> _selectedAnswers = {};
 
-  bool _isPlaying = false;
-  Timer? _audioTimer;
-  final Duration _audioDuration = const Duration(minutes: 2, seconds: 40);
-  Duration _audioPosition = Duration.zero;
+  // bool _isPlaying = false;
+  // Timer? _audioTimer;
+  // final Duration _audioDuration = const Duration(minutes: 2, seconds: 40);
+  // Duration _audioPosition = Duration.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    for (var soal in widget.section.soal) {
+      _selectedAnswers[soal.id] = null;
+    }
+  }
 
   @override
   void dispose() {
-    _audioTimer?.cancel();
+    // _audioTimer?.cancel();
     super.dispose();
   }
 
-  String _formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(d.inMinutes.remainder(60));
-    final seconds = twoDigits(d.inSeconds.remainder(60));
-    return '$minutes:$seconds';
-  }
+  // String _formatDuration(Duration d) {
+  //   String twoDigits(int n) => n.toString().padLeft(2, '0');
+  //   final minutes = twoDigits(d.inMinutes.remainder(60));
+  //   final seconds = twoDigits(d.inSeconds.remainder(60));
+  //   return '$minutes:$seconds';
+  // }
 
-  void _toggleAudioPlayback() {
-    if (_isPlaying) {
-      _audioTimer?.cancel();
-    } else {
-      if (_audioPosition >= _audioDuration) {
-        _audioPosition = Duration.zero;
-      }
-      _audioTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_audioPosition >= _audioDuration) {
-          timer.cancel();
-          setState(() {
-            _isPlaying = false;
-          });
-        } else {
-          setState(() {
-            _audioPosition += const Duration(seconds: 1);
-          });
-        }
-      });
-    }
-    setState(() {
-      _isPlaying = !_isPlaying;
-    });
-  }
+  // void _toggleAudioPlayback() {
+  //   if (_isPlaying) {
+  //     _audioTimer?.cancel();
+  //   } else {
+  //     if (_audioPosition >= _audioDuration) {
+  //       _audioPosition = Duration.zero;
+  //     }
+  //     _audioTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //       if (_audioPosition >= _audioDuration) {
+  //         timer.cancel();
+  //         setState(() {
+  //           _isPlaying = false;
+  //         });
+  //       } else {
+  //         setState(() {
+  //           _audioPosition += const Duration(seconds: 1);
+  //         });
+  //       }
+  //     });
+  //   }
+  //   setState(() {
+  //     _isPlaying = !_isPlaying;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    context.read<TestViewModel>().currentAnswers = _selectedAnswers;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.section == TestSection.reading) _buildReadingSection(),
-          if (widget.section == TestSection.listening) _buildListeningSection(),
-          if (widget.section == TestSection.writing) _buildWritingSection(),
-          if (widget.section == TestSection.structure) _buildStructureSection(),
+          // if (widget.section == TestSection.reading) _buildReadingSection(),
+          // if (widget.section == TestSection.listening) _buildListeningSection(),
+          // if (widget.section == TestSection.writing) _buildWritingSection(),
+          // if (widget.section == TestSection.structure) _buildStructureSection(),
+          _buildTestSection(),
           const SizedBox(height: 40),
           _buildNextButton(context),
         ],
@@ -780,22 +885,39 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     );
   }
 
-  Widget _buildReadingSection() {
-    final readingQuestions = MockData.questions[TestSection.reading]!;
+  Widget _buildTestSection() {
+    final readingQuestions = widget.section.soal;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildPassageCard(),
+        // _buildPassageCard(),
         const SizedBox(height: 24),
         ...readingQuestions.asMap().entries.map((entry) {
           int index = entry.key;
-          Question question = entry.value;
+          Soal question = entry.value;
           return _buildQuestionCard(question, index + 1);
-        }).toList(),
+        }),
       ],
     );
   }
 
+  // Widget _buildReadingSection() {
+  //   final readingQuestions = MockData.questions[TestSection.reading]!;
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       _buildPassageCard(),
+  //       const SizedBox(height: 24),
+  //       ...readingQuestions.asMap().entries.map((entry) {
+  //         int index = entry.key;
+  //         Question question = entry.value;
+  //         return _buildQuestionCard(question, index + 1);
+  //       }),
+  //     ],
+  //   );
+  // }
+
+  // TODO: passage from attachment
   Widget _buildPassageCard() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -832,102 +954,102 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
     );
   }
 
-  Widget _buildListeningSection() {
-    final listeningQuestions = MockData.questions[TestSection.listening]!;
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const Text(
-                "Now, listen to the audio and answer the questions below.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: _toggleAudioPlayback,
-                child: Icon(
-                  _isPlaying ? Iconsax.pause_circle5 : Iconsax.play_circle5,
-                  size: 80,
-                  color: AppColors.accent,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "${_formatDuration(_audioPosition)} / ${_formatDuration(_audioDuration)}",
-                style: const TextStyle(fontSize: 12, color: Colors.black54),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        ...listeningQuestions.asMap().entries.map((entry) {
-          int index = entry.key;
-          Question question = entry.value;
-          return _buildQuestionCard(question, index + 1);
-        }).toList(),
-      ],
-    );
-  }
+  // Widget _buildListeningSection() {
+  //   final listeningQuestions = MockData.questions[TestSection.listening]!;
+  //   return Column(
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.all(20),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(20),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.black.withOpacity(0.05),
+  //               blurRadius: 10,
+  //               offset: const Offset(0, 5),
+  //             ),
+  //           ],
+  //         ),
+  //         child: Column(
+  //           children: [
+  //             const Text(
+  //               "Now, listen to the audio and answer the questions below.",
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 color: AppColors.primary,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 16),
+  //             GestureDetector(
+  //               onTap: _toggleAudioPlayback,
+  //               child: Icon(
+  //                 _isPlaying ? Iconsax.pause_circle5 : Iconsax.play_circle5,
+  //                 size: 80,
+  //                 color: AppColors.accent,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 8),
+  //             Text(
+  //               "${_formatDuration(_audioPosition)} / ${_formatDuration(_audioDuration)}",
+  //               style: const TextStyle(fontSize: 12, color: Colors.black54),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       const SizedBox(height: 24),
+  //       ...listeningQuestions.asMap().entries.map((entry) {
+  //         int index = entry.key;
+  //         Question question = entry.value;
+  //         return _buildQuestionCard(question, index + 1);
+  //       }),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildWritingSection() {
-    final writingQuestion = MockData.questions[TestSection.writing]!.first;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildQuestionCard(writingQuestion, 1),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xffCBDCEB)),
-          ),
-          child: const TextField(
-            maxLines: 10,
-            decoration: InputDecoration(
-              hintText: "Start writing your essay here...",
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildWritingSection() {
+  //   final writingQuestion = MockData.questions[TestSection.writing]!.first;
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       _buildQuestionCard(writingQuestion, 1),
+  //       const SizedBox(height: 16),
+  //       Container(
+  //         padding: const EdgeInsets.all(16),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(16),
+  //           border: Border.all(color: const Color(0xffCBDCEB)),
+  //         ),
+  //         child: const TextField(
+  //           maxLines: 10,
+  //           decoration: InputDecoration(
+  //             hintText: "Start writing your essay here...",
+  //             border: InputBorder.none,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildStructureSection() {
-    final structureQuestions = MockData.questions[TestSection.structure]!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...structureQuestions.asMap().entries.map((entry) {
-          int index = entry.key;
-          Question question = entry.value;
-          return _buildQuestionCard(question, index + 1);
-        }).toList(),
-      ],
-    );
-  }
+  // Widget _buildStructureSection() {
+  //   final structureQuestions = MockData.questions[TestSection.structure]!;
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       ...structureQuestions.asMap().entries.map((entry) {
+  //         int index = entry.key;
+  //         Question question = entry.value;
+  //         return _buildQuestionCard(question, index + 1);
+  //       }),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildQuestionCard(Question question, int number) {
+  Widget _buildQuestionCard(Soal question, int number) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -949,29 +1071,28 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           ),
           const SizedBox(height: 8),
           Text(
-            question.text,
+            question.pertanyaan,
             style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
-          if (question.options.isNotEmpty)
-            ...question.options.asMap().entries.map((entry) {
-              int optionIndex = entry.key;
-              String optionText = entry.value;
+          if (question.opsi.isNotEmpty)
+            ...question.opsi.asMap().entries.map((entry) {
+              final opsi = entry.value;
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: _buildOptionTile(question.id, optionIndex, optionText),
+                child: _buildOptionTile(question.id, opsi),
               );
-            }).toList(),
+            }),
         ],
       ),
     );
   }
 
-  Widget _buildOptionTile(String questionId, int optionIndex, String text) {
-    bool isSelected = _selectedAnswers[questionId] == optionIndex;
+  Widget _buildOptionTile(String questionId, Opsi opsi) {
+    bool isSelected = _selectedAnswers[questionId] == opsi.id;
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedAnswers[questionId] = optionIndex;
+          _selectedAnswers[questionId] = opsi.id;
         });
       },
       child: Container(
@@ -991,7 +1112,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                text,
+                opsi.isi,
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.black87,
                 ),
@@ -1016,9 +1137,7 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           ),
         ),
         child: Text(
-          widget.section == TestSection.structure
-              ? "Finish Test"
-              : "Next Section",
+          widget.isLast ? "Finish Test" : "Next Section",
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

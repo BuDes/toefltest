@@ -1,26 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/models/jadwal.dart';
 import 'package:toeflapp/pages/online_test/test_flow_pages.dart';
 import 'package:toeflapp/theme/app_colors.dart';
-
-// [BARU] Data Model untuk merepresentasikan sebuah Test
-// Ini adalah best practice untuk memisahkan data dari UI.
-class TestModel {
-  final String id;
-  final String title;
-  final String
-  scheduleInfo; // Teks yang akan ditampilkan (e.g., "Available Anytime")
-  final String date;
-  final String time;
-
-  TestModel({
-    required this.id,
-    required this.title,
-    required this.scheduleInfo,
-    required this.date,
-    required this.time,
-  });
-}
+import 'package:toeflapp/view_models/test_view_model.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -30,49 +14,24 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  final List<TestModel> _allTests = [
-    TestModel(
-      id: 'p1',
-      title: "TOEFL Practice Test 1",
-      scheduleInfo: "Available Anytime",
-      date: "Anytime",
-      time: "",
-    ),
-    TestModel(
-      id: 'p2',
-      title: "TOEFL Practice Test 2",
-      scheduleInfo: "Available Anytime",
-      date: "Anytime",
-      time: "",
-    ),
-    TestModel(
-      id: 'moct',
-      title: "Mock Test October",
-      scheduleInfo: "Registration Open",
-      date: "10 Oct 2025",
-      time: "10:00 AM",
-    ),
-    TestModel(
-      id: 'mnov',
-      title: "Mock Test November",
-      scheduleInfo: "Registration Open",
-      date: "15 Nov 2025",
-      time: "02:00 PM",
-    ),
-  ];
-
-  // [BARU] State untuk melacak ID tes yang sudah didaftarkan oleh pengguna.
-  final Set<String> _registeredTestIds = {};
-
   // [BARU] Method untuk menangani proses registrasi
-  void _registerForTest(TestModel test) {
-    setState(() {
-      _registeredTestIds.add(test.id);
-    });
+  void _registerForTest(BuildContext context, Jadwal test) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final error = await context.read<TestViewModel>().daftarTest(test.id);
+    if (error != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(error),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       SnackBar(
-        content: Text("Berhasil mendaftar untuk: ${test.title}"),
+        content: Text("Berhasil mendaftar untuk: ${test.nama}"),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
       ),
@@ -80,7 +39,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   // [BARU] Menampilkan dialog konfirmasi sebelum registrasi
-  void _showRegistrationConfirmation(BuildContext context, TestModel test) {
+  void _showRegistrationConfirmation(BuildContext context, Jadwal test) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -97,7 +56,7 @@ class _TestPageState extends State<TestPage> {
             ),
           ),
           content: Text(
-            "Anda yakin ingin mendaftar untuk test '${test.title}'?",
+            "Anda yakin ingin mendaftar untuk test '${test.nama}'?",
           ),
           actions: [
             TextButton(
@@ -122,7 +81,7 @@ class _TestPageState extends State<TestPage> {
               ),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                _registerForTest(test);
+                _registerForTest(context, test);
               },
             ),
           ],
@@ -133,13 +92,15 @@ class _TestPageState extends State<TestPage> {
 
   @override
   Widget build(BuildContext context) {
-    // [BARU] Memfilter daftar tes secara dinamis berdasarkan state pendaftaran
-    final availableTests = _allTests
-        .where((test) => !_registeredTestIds.contains(test.id))
-        .toList();
-    final scheduledTests = _allTests
-        .where((test) => _registeredTestIds.contains(test.id))
-        .toList();
+    final testVM = context.watch<TestViewModel>();
+    final availableTests = testVM.unregisteredTests;
+    final scheduledTests = testVM.registeredTests;
+    // final availableTests = _allTests
+    //     .where((test) => !_registeredTestIds.contains(test.id))
+    //     .toList();
+    // final scheduledTests = _allTests
+    //     .where((test) => _registeredTestIds.contains(test.id))
+    //     .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xffF5EFE6),
@@ -183,9 +144,9 @@ class _TestPageState extends State<TestPage> {
                 ),
               )
             else
-              ...availableTests
-                  .map((test) => _buildAvailableTestTile(context, test))
-                  .toList(),
+              ...availableTests.map(
+                (test) => _buildAvailableTestTile(context, test),
+              ),
 
             const SizedBox(height: 32),
 
@@ -207,9 +168,9 @@ class _TestPageState extends State<TestPage> {
                 ),
               )
             else
-              ...scheduledTests
-                  .map((test) => _buildScheduledTestTile(context, test))
-                  .toList(),
+              ...scheduledTests.map(
+                (test) => _buildScheduledTestTile(context, test),
+              ),
 
             const SizedBox(height: 56),
           ],
@@ -218,9 +179,7 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  // [UBAH] Widget ini sekarang untuk tes yang TERSEDIA dan memicu pendaftaran
-  // [UBAH] Widget ini sekarang untuk tes yang TERSEDIA dan memicu pendaftaran
-  Widget _buildAvailableTestTile(BuildContext context, TestModel test) {
+  Widget _buildAvailableTestTile(BuildContext context, Jadwal test) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -253,7 +212,7 @@ class _TestPageState extends State<TestPage> {
           backgroundColor: Color.fromARGB(255, 80, 113, 149),
         ),
         title: Text(
-          test.title,
+          test.nama,
           style: const TextStyle(
             color: AppColors.primary,
             fontWeight: FontWeight.bold,
@@ -303,13 +262,14 @@ class _TestPageState extends State<TestPage> {
   }
 
   // [UBAH] Widget ini sekarang untuk tes yang SUDAH DIDAFTAR dan memulai tes
-  Widget _buildScheduledTestTile(BuildContext context, TestModel test) {
+  Widget _buildScheduledTestTile(BuildContext context, Jadwal test) {
     return InkWell(
       onTap: () {
         // [UBAH] Arahkan ke halaman detail test dari jadwal yang sudah terdaftar
+        // TODO: tolak jika blm waktunya
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => TestDetailPage(testTitle: test.title),
+            builder: (context) => TestDetailPage(jadwal: test),
           ),
         );
       },
@@ -342,7 +302,7 @@ class _TestPageState extends State<TestPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    test.title,
+                    test.nama,
                     style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
@@ -352,21 +312,19 @@ class _TestPageState extends State<TestPage> {
                   Row(
                     children: [
                       Text(
-                        test.date,
+                        test.tanggalString,
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 13,
                         ),
                       ),
-                      if (test.time.isNotEmpty) const SizedBox(width: 8),
-                      if (test.time.isNotEmpty)
-                        Text(
-                          test.time,
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 41, 59, 81),
-                            fontSize: 13,
-                          ),
+                      Text(
+                        "  ${test.jamString}",
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 41, 59, 81),
+                          fontSize: 13,
                         ),
+                      ),
                     ],
                   ),
                 ],

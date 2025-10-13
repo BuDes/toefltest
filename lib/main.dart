@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart'; // ✅ Tambahkan ini
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:toeflapp/pages/auth/auth_check.dart';
 import 'package:toeflapp/theme/app_colors.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
 
   // ✅ Inisialisasi data lokal (contoh: Bahasa Indonesia)
   await initializeDateFormatting('id_ID', null);
+  Intl.defaultLocale = "id_ID";
 
   // Aktifkan edge-to-edge mode biar nav bar gak hitam
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

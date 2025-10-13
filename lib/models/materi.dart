@@ -37,7 +37,7 @@ class Materi {
       videoFile: json["videoFile"],
       intro: json["intro"],
       content: json["content"],
-      tanggal: DateTime.parse(json["createdAt"]),
+      tanggal: DateTime.parse(json["createdAt"]).toLocal(),
     );
   }
 }
