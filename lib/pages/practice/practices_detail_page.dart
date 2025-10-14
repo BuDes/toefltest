@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +26,11 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
   bool _isStarted = false;
   int _currentSection = 0;
   int _currentQuestion = 0;
-  bool _isPlayingAudio = false;
   bool _loading = false;
   String? _error;
+  String? _currentUrl;
+
+  final _player = AudioPlayer();
 
   // User answers disimpan di sini
   final Map<String, String?> _userAnswers = {};
@@ -59,6 +62,24 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
       _sections = sections;
       _isStarted = true;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _player.setReleaseMode(ReleaseMode.stop);
+
+    // When playback completes
+    _player.onPlayerComplete.listen((event) async {
+      await Future.delayed(const Duration(milliseconds: 300));
+      await _player.seek(Duration.zero);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _player.dispose();
   }
 
   @override
@@ -190,14 +211,31 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
     );
   }
 
+  void _handleAudioChange(String? audioFile) async {
+    if (audioFile == null) {
+      _player.stop();
+    }
+    if (audioFile != null && audioFile != _currentUrl) {
+      _currentUrl = audioFile;
+      _player.stop();
+      _player.setSource(UrlSource(audioFile));
+    }
+  }
+
   /// 🔹 Listening Section
   Widget _buildSoal(Soal question) {
+    final audioFile = question.attachment?.audioFile;
+    _handleAudioChange(audioFile);
+
     return GradientBorderContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // TODO: build audio if available
-          _buildAudioPlayer(),
+          _buildPassage(question.attachment),
+          _AttachmentAudioPlayer(
+            attachment: question.attachment,
+            player: _player,
+          ),
           const SizedBox(height: 12),
           Text(
             question.pertanyaan,
@@ -222,25 +260,20 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
     );
   }
 
-  Widget _buildAudioPlayer() {
-    return Row(
+  Widget _buildPassage(Attachment? attachment) {
+    if (attachment?.passage == null) return const SizedBox();
+
+    return Column(
       children: [
-        IconButton(
-          icon: Icon(
-            _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
-            size: 36,
-            color: primaryBlue,
-          ),
-          onPressed: () => setState(() => _isPlayingAudio = !_isPlayingAudio),
-        ),
-        Expanded(
-          child: Slider(
-            value: _isPlayingAudio ? 0.5 : 0.0,
-            onChanged: (_) {},
-            activeColor: primaryBlue,
-            inactiveColor: Colors.grey.shade300,
+        Text(
+          attachment!.passage!,
+          style: const TextStyle(
+            fontSize: 13,
+            height: 1.4,
+            color: Colors.black87,
           ),
         ),
+        const Divider(height: 24, thickness: 1),
       ],
     );
   }
@@ -438,6 +471,85 @@ class _PracticeTestDetailPageState extends State<PracticeTestDetailPage> {
           ],
         );
       },
+    );
+  }
+}
+
+class _AttachmentAudioPlayer extends StatefulWidget {
+  const _AttachmentAudioPlayer({
+    required this.attachment,
+    required this.player,
+  });
+
+  final Attachment? attachment;
+  final AudioPlayer player;
+
+  @override
+  State<_AttachmentAudioPlayer> createState() => _AttachmentAudioPlayerState();
+}
+
+class _AttachmentAudioPlayerState extends State<_AttachmentAudioPlayer> {
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+
+  Attachment? get _attachment => widget.attachment;
+  AudioPlayer get _player => widget.player;
+  bool get _isPlayingAudio => _player.state == PlayerState.playing;
+
+  void _pausePlay() async {
+    if (_isPlayingAudio) {
+      _player.pause();
+    } else {
+      _player.resume();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _player.setSource(UrlSource(_attachment!.audioFile!));
+    // Listen for duration changes
+    _player.onDurationChanged.listen((Duration d) {
+      setState(() => _duration = d);
+    });
+
+    // Listen for audio position changes
+    _player.onPositionChanged.listen((Duration p) {
+      setState(() => _position = p);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_attachment?.audioFile == null) return const SizedBox();
+
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
+            size: 36,
+            color: primaryBlue,
+          ),
+          onPressed: _pausePlay,
+        ),
+        Expanded(
+          child: Slider(
+            min: 0,
+            max: _duration.inSeconds.toDouble(),
+            value: _position.inSeconds.toDouble().clamp(
+              0,
+              _duration.inSeconds.toDouble(),
+            ),
+            onChanged: (value) async {
+              final position = Duration(seconds: value.toInt());
+              await _player.seek(position);
+            },
+            activeColor: primaryBlue,
+            inactiveColor: Colors.grey.shade300,
+          ),
+        ),
+      ],
     );
   }
 }

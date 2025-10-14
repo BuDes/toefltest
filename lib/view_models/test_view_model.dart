@@ -38,7 +38,7 @@ class TestViewModel extends ChangeNotifier {
   Future<List<TestSection>?> getRealTest() async {
     try {
       final response = await ApiService.getRequest(
-        "$_soalEndpoint/practice_test",
+        "$_soalEndpoint/real_test",
       );
       if (response.statusCode < 300) {
         final json = response.data as List;
