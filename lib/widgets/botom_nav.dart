@@ -8,6 +8,7 @@ import 'package:toeflapp/pages/profile/profile_page.dart';
 import 'package:toeflapp/pages/online_test/test_page.dart';
 import 'package:toeflapp/services/socket_service.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
+import 'package:toeflapp/view_models/message_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
 import 'package:toeflapp/view_models/test_view_model.dart';
 
@@ -32,10 +33,11 @@ class _BottomNavState extends State<BottomNav> {
   @override
   void initState() {
     super.initState();
-    context.read<RiwayatViewModel>().getRiwayat();
-    context.read<TestViewModel>().getMyJadwal();
     final id = context.read<AuthViewModel>().currentUser!.id;
     _socketService.connect(id);
+    context.read<MessageViewModel>().socketService = _socketService;
+    context.read<RiwayatViewModel>().getRiwayat();
+    context.read<TestViewModel>().getMyJadwal();
   }
 
   @override

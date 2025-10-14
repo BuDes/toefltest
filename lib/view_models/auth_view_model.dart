@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toeflapp/models/user.dart';
 import 'package:toeflapp/pages/auth/models/new_user.dart';
 import 'package:toeflapp/services/api_service.dart';
+import 'package:toeflapp/view_models/message_view_model.dart';
 
 class AuthViewModel extends ChangeNotifier {
+  AuthViewModel(this.context);
+  BuildContext context;
+
   final _endpoint = "${ApiService.baseUrl}/user";
 
   User? _currentUser;
@@ -25,6 +30,7 @@ class AuthViewModel extends ChangeNotifier {
       if (response.statusCode < 300) {
         _currentUser = User.fromJson(response.data);
         await _setToken(response.data["token"], response.data["role"]);
+        _refreshData();
         notifyListeners();
         return null;
       }
@@ -46,6 +52,7 @@ class AuthViewModel extends ChangeNotifier {
       );
       if (response.statusCode < 300) {
         await _setToken(response.data["token"], response.data["role"]);
+        _refreshData();
         _currentUser = User.fromJson(response.data);
         notifyListeners();
         return null;
@@ -158,5 +165,9 @@ class AuthViewModel extends ChangeNotifier {
     } else {
       prefs.setString("ROLE", role);
     }
+  }
+
+  Future _refreshData() async {
+    await context.read<MessageViewModel>().clearDataPesan();
   }
 }

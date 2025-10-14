@@ -7,6 +7,7 @@ import 'package:toeflapp/pages/auth/auth_check.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
+import 'package:toeflapp/view_models/message_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
 import 'package:toeflapp/view_models/test_view_model.dart';
 
@@ -41,21 +42,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ChangeNotifierProvider(create: (context) => AuthViewModel(context)),
         ChangeNotifierProvider(create: (context) => MateriViewModel()),
         ChangeNotifierProvider(create: (context) => RiwayatViewModel()),
         ChangeNotifierProvider(create: (context) => TestViewModel()),
+        ChangeNotifierProvider(create: (context) => MessageViewModel()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Berlingvo',
-        theme: ThemeData(
-          useMaterial3: true,
-          fontFamily: "Poppins",
-          primaryColor: AppColors.primary,
-        ),
-        home: const AuthCheck(),
-      ),
+      builder: (context, child) {
+        context.read<AuthViewModel>().context = context;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Berlingvo',
+          theme: ThemeData(
+            useMaterial3: true,
+            fontFamily: "Poppins",
+            primaryColor: AppColors.primary,
+          ),
+          home: const AuthCheck(),
+        );
+      },
     );
   }
 }

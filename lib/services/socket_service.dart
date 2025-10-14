@@ -36,7 +36,7 @@ class SocketService {
   }
 
   void createMessage(
-    int idPenerima,
+    String idPenerima,
     String content,
     Function(Map<String, dynamic>) callback,
   ) async {

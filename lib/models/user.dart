@@ -16,4 +16,20 @@ class User {
       email: json["email"],
     );
   }
+
+  factory User.fromDatabase(Map<String, dynamic> json) {
+    return User(
+      id: json["id"],
+      email: json["email"],
+      name: json["nama"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "nama": name,
+      "email": email,
+    };
+  }
 }

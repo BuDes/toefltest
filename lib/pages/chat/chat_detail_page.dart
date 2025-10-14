@@ -1,48 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:toeflapp/models/message.dart';
+import 'package:toeflapp/models/user.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/view_models/auth_view_model.dart';
+import 'package:toeflapp/view_models/message_view_model.dart';
 
 const Color primaryBlue = AppColors.primary;
 const Color accentOrange = AppColors.accent;
 
 class ChatDetailPage extends StatefulWidget {
-  const ChatDetailPage({super.key});
+  const ChatDetailPage({super.key, required this.oppose});
+  final User oppose;
 
   @override
   State<ChatDetailPage> createState() => _ChatDetailPageState();
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  final List<Map<String, String>> messages = [
-    {"sender": "bot", "text": "Halo 👋, ada yang bisa saya bantu?"},
-  ];
   final TextEditingController _controller = TextEditingController();
 
   void _sendMessage() {
     if (_controller.text.trim().isEmpty) return;
+    final idPengirim = context.read<AuthViewModel>().currentUser!.id;
+    final pesan = ChatMessage(
+      id: null,
+      isi: _controller.text.trim(),
+      status: StatusPesan.pending,
+      waktuKirim: DateTime.now(),
+      idPengirim: idPengirim,
+      idPenerima: widget.oppose.id,
+    );
+    context.read<MessageViewModel>().createMessage(pesan);
+    _controller.text = "";
+    // setState(() {
+    //   messages.add({"sender": "user", "text": _controller.text.trim()});
+    // });
+    // _controller.clear();
 
-    setState(() {
-      messages.add({"sender": "user", "text": _controller.text.trim()});
-    });
-    _controller.clear();
-
-    // Simulasi balasan bot
-    Future.delayed(const Duration(milliseconds: 800), () {
-      setState(() {
-        messages.add({"sender": "bot", "text": "Oke, saya catat ya! ✨"});
-      });
-    });
+    // // Simulasi balasan bot
+    // Future.delayed(const Duration(milliseconds: 800), () {
+    //   setState(() {
+    //     messages.add({"sender": "bot", "text": "Oke, saya catat ya! ✨"});
+    //   });
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    final messages = context.watch<MessageViewModel>().getPesanByUser(
+      widget.oppose.id,
+    );
+    context.read<MessageViewModel>().readPesan(widget.oppose.id);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
         backgroundColor: primaryBlue,
         elevation: 2,
-        title: const Text(
-          "Chat dengan Pakar",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          widget.oppose.name,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -50,13 +71,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         children: [
           Expanded(
             child: ListView.builder(
+              reverse: true,
               padding: const EdgeInsets.all(16),
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final msg = messages[index];
-                final isUser = msg["sender"] == "user";
+                final id = context.read<AuthViewModel>().currentUser!.id;
+                final isPengirim = msg.isPengirim(id);
                 return Align(
-                  alignment: isUser
+                  alignment: isPengirim
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Container(
@@ -66,23 +89,42 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: isUser
+                      color: isPengirim
                           ? accentOrange
                           : primaryBlue.withOpacity(0.9),
                       borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(16),
                         topRight: const Radius.circular(16),
-                        bottomLeft: isUser
+                        bottomLeft: isPengirim
                             ? const Radius.circular(16)
                             : Radius.zero,
-                        bottomRight: isUser
+                        bottomRight: isPengirim
                             ? Radius.zero
                             : const Radius.circular(16),
                       ),
                     ),
-                    child: Text(
-                      msg["text"]!,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            msg.isi,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        if (msg.status == StatusPesan.pending)
+                          const SizedBox(width: 8),
+                        if (msg.status == StatusPesan.pending)
+                          const Icon(
+                            Icons.pending_outlined,
+                            size: 15,
+                            color: Colors.white54,
+                          ),
+                      ],
                     ),
                   ),
                 );
