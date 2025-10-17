@@ -30,6 +30,16 @@ class _BottomNavState extends State<BottomNav> {
     ProfilePage(),
   ];
 
+  void _changeIndex(int index) {
+    setState(() => _currentIndex = index);
+
+    if (index == 1) context.read<TestViewModel>().getMyJadwal();
+    if (index == 3) {
+      context.read<RiwayatViewModel>().getRiwayat();
+      context.read<AuthViewModel>().getProfile();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +63,7 @@ class _BottomNavState extends State<BottomNav> {
             filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: BottomNavigationBar(
               currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
+              onTap: _changeIndex,
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.white12,
               selectedItemColor: const Color.fromARGB(255, 58, 80, 107),

@@ -31,7 +31,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       idPengirim: idPengirim,
       idPenerima: widget.oppose.id,
     );
-    context.read<MessageViewModel>().createMessage(pesan);
+    context.read<MessageViewModel>().createMessage(pesan, widget.oppose);
     _controller.text = "";
     // setState(() {
     //   messages.add({"sender": "user", "text": _controller.text.trim()});

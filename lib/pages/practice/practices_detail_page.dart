@@ -507,7 +507,7 @@ class _AttachmentAudioPlayerState extends State<_AttachmentAudioPlayer> {
   @override
   void initState() {
     super.initState();
-    _player.setSource(UrlSource(_attachment!.audioFile!));
+    // _player.setSource(UrlSource(_attachment!.audioFile!));
     // Listen for duration changes
     _player.onDurationChanged.listen((Duration d) {
       setState(() => _duration = d);

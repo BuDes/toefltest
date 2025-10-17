@@ -55,16 +55,17 @@ class MessageViewModel extends ChangeNotifier {
   }
 
   Future<List<ChatRoomPreview>> getChatroomPreviews() async {
-    final listUsers = await _getUsers();
     await getPesan();
+    final listUsers = await _getUsers();
     _listPreviews = _chatroomPreviewsFromUsers(listUsers);
     notifyListeners();
     return _listPreviews;
   }
 
-  Future createMessage(ChatMessage pesan) async {
+  Future createMessage(ChatMessage pesan, User oppose) async {
     _listPesan.insert(0, pesan);
     notifyListeners();
+    await _dbService.saveUsers([oppose.toMap()]);
 
     socketService!.createMessage(pesan.idPenerima, pesan.isi, (response) async {
       if (response["status"]) {

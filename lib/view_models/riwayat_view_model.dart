@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -36,6 +37,20 @@ class RiwayatViewModel extends ChangeNotifier {
       throw Exception(response.message);
     } catch (e, stacktrace) {
       log("Failed to register: $e", stackTrace: stacktrace);
+      return "Terjadi kesalahan";
+    }
+  }
+
+  Future<String?> recordMateriHistory(String id) async {
+    try {
+      final response = await ApiService.postRequest(
+        "$_endpoint/add",
+        body: jsonEncode({"idMateri": id}),
+      );
+      if (response.statusCode < 300) return null;
+      throw Exception(response.message);
+    } catch (e, stacktrace) {
+      log("Failed to record materi history: $e", stackTrace: stacktrace);
       return "Terjadi kesalahan";
     }
   }

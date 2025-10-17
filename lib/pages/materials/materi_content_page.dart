@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toeflapp/models/materi.dart';
 import 'package:toeflapp/pages/materials/materi_video_player.dart';
+import 'package:toeflapp/services/api_service.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/materi_view_model.dart';
+import 'package:toeflapp/view_models/riwayat_view_model.dart';
 
 class MateriContentPage extends StatelessWidget {
   const MateriContentPage({super.key, required this.materi});
@@ -30,13 +32,15 @@ class MateriContentPage extends StatelessWidget {
     }
 
     // Kalau cuma nama file, baru tambahkan prefix
-    return 'http://10.154.29.180:3000/video/$videoFilename';
+    return '${ApiService.hostUrl}/video/$videoFilename';
   }
 
   @override
   Widget build(BuildContext context) {
     final materiVM = context.read<MateriViewModel>();
+    final riwayatVM = context.read<RiwayatViewModel>();
     final nextMateri = materiVM.nextMateri(materi);
+    riwayatVM.recordMateriHistory(materi.id);
 
     return Scaffold(
       backgroundColor: const Color(0xffF8FAFC),

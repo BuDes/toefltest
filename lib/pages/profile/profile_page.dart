@@ -40,7 +40,7 @@ class ProfilePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 60, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 60, 16, 100),
         children: [
           // 🔹 Header User
           Row(
@@ -175,7 +175,7 @@ class ProfilePage extends StatelessWidget {
           ...List.generate(listRiwayat.length, (index) {
             final riwayat = listRiwayat[index];
             return _historyCard(
-              riwayat.materi?.nama ?? riwayat.jadwal?.nama ?? "",
+              riwayat.materi?.nama ?? riwayat.jadwal?.nama ?? "Practice Test",
               riwayat.tanggal,
               riwayat.materi != null ? Iconsax.book : Iconsax.task_square,
             );

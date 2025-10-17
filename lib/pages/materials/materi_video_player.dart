@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -14,7 +16,6 @@ class _MateriVideoPlayerState extends State<MateriVideoPlayer> {
   late VideoPlayerController _controller;
   bool _isLoading = true;
   bool _hasError = false;
-  String _errorMessage = '';
 
   @override
   void initState() {
@@ -27,25 +28,22 @@ class _MateriVideoPlayerState extends State<MateriVideoPlayer> {
       setState(() {
         _isLoading = true;
         _hasError = false;
-        _errorMessage = '';
       });
 
-      print("Initializing video: ${widget.videoUrl}"); // Debug log
+      log("Initializing video: ${widget.videoUrl}");
 
-      _controller = VideoPlayerController.network(
-        widget.videoUrl,
+      _controller = VideoPlayerController.networkUrl(
+        Uri.parse(widget.videoUrl),
       );
 
       // Add listener untuk error handling
       _controller.addListener(() {
         if (_controller.value.hasError) {
-          print(
+          log(
             "Video controller error: ${_controller.value.errorDescription}",
           );
           setState(() {
             _hasError = true;
-            _errorMessage =
-                _controller.value.errorDescription ?? 'Unknown error';
           });
         }
       });
@@ -58,12 +56,11 @@ class _MateriVideoPlayerState extends State<MateriVideoPlayer> {
 
       // Auto-play video setelah load
       _controller.play();
-    } catch (e) {
-      print("Error loading video: $e");
+    } catch (e, stacktrace) {
+      log("Error loading video: $e", stackTrace: stacktrace);
       setState(() {
         _isLoading = false;
         _hasError = true;
-        _errorMessage = e.toString();
       });
     }
   }
@@ -178,11 +175,6 @@ class _MateriVideoPlayerState extends State<MateriVideoPlayer> {
             const Text(
               "Gagal memuat video",
               style: TextStyle(color: Colors.red),
-            ),
-            Text(
-              _errorMessage,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             ElevatedButton(
