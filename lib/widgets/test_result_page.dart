@@ -208,6 +208,8 @@ class _TestResultPageState extends State<TestResultPage> {
   }
 
   Widget _questionCard(HasilJawaban data) {
+    final isCorrect = data.idOpsiBenar == data.idOpsi;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -228,24 +230,30 @@ class _TestResultPageState extends State<TestResultPage> {
             ),
           ),
           const SizedBox(height: 12),
+          if (!isCorrect)
+            Text(
+              data.pembahasan,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          if (!isCorrect) const SizedBox(height: 12),
 
           ...List.generate(data.opsi.length, (index) {
             final opsi = data.opsi[index];
-            final isCorrect = opsi.id == data.idOpsiBenar;
+            final isOpsiCorrect = opsi.id == data.idOpsiBenar;
             final isUserChoice = opsi.id == data.idOpsi;
 
             Color bgColor = Colors.white;
             IconData? icon;
 
-            if (data.idOpsi == null && isCorrect) {
+            if (data.idOpsi == null && isOpsiCorrect) {
               bgColor = Colors.orange.withOpacity(0.05);
-            } else if (isUserChoice && isCorrect) {
+            } else if (isUserChoice && isOpsiCorrect) {
               bgColor = Colors.green.withOpacity(0.1);
               icon = Icons.check_circle;
-            } else if (isUserChoice && !isCorrect) {
+            } else if (isUserChoice && !isOpsiCorrect) {
               bgColor = Colors.red.withOpacity(0.1);
               icon = Icons.cancel;
-            } else if (isCorrect) {
+            } else if (isOpsiCorrect) {
               bgColor = Colors.green.withOpacity(0.05);
               icon = Icons.check;
             }
@@ -257,7 +265,7 @@ class _TestResultPageState extends State<TestResultPage> {
                 color: bgColor,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isCorrect
+                  color: isOpsiCorrect
                       ? data.idOpsi != null
                             ? Colors.green
                             : Colors.orange
@@ -273,7 +281,7 @@ class _TestResultPageState extends State<TestResultPage> {
                     Icon(
                       icon,
                       size: 18,
-                      color: isCorrect ? Colors.green : Colors.red,
+                      color: isOpsiCorrect ? Colors.green : Colors.red,
                     ),
                 ],
               ),
