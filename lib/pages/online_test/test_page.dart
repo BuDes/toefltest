@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:toeflapp/models/jadwal.dart';
 import 'package:toeflapp/pages/online_test/test_flow_pages.dart';
 import 'package:toeflapp/theme/app_colors.dart';
+import 'package:toeflapp/utils/app_constants.dart';
 import 'package:toeflapp/view_models/test_view_model.dart';
 
 class TestPage extends StatefulWidget {
@@ -265,8 +268,14 @@ class _TestPageState extends State<TestPage> {
   Widget _buildScheduledTestTile(BuildContext context, Jadwal test) {
     return InkWell(
       onTap: () {
+        final now = DateTime.now();
+        final toleransi = test.tanggal.add(AppConstants.toleransiDaftarTest);
+        final isTime = now.isAfter(test.tanggal) && now.isBefore(toleransi);
+        if (!isTime) {
+          log("Not test schedule yet");
+          return;
+        }
         // [UBAH] Arahkan ke halaman detail test dari jadwal yang sudah terdaftar
-        // TODO: tolak jika blm waktunya
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => TestDetailPage(jadwal: test),

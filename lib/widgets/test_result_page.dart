@@ -8,21 +8,24 @@ import 'package:toeflapp/view_models/test_view_model.dart';
 const Color primaryBlue = AppColors.primary;
 const Color cream1 = Color(0xffF5EFE6);
 
-class PracticeTestResultPage extends StatefulWidget {
-  const PracticeTestResultPage({super.key});
+class TestResultPage extends StatefulWidget {
+  const TestResultPage({super.key, this.idJadwal});
+  final String? idJadwal;
 
   @override
-  State<PracticeTestResultPage> createState() => _PracticeTestResultPageState();
+  State<TestResultPage> createState() => _TestResultPageState();
 }
 
-class _PracticeTestResultPageState extends State<PracticeTestResultPage> {
+class _TestResultPageState extends State<TestResultPage> {
   List<HasilJawaban> _results = [];
 
   void _loadResults() async {
     final testVM = context.read<TestViewModel>();
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
-    final results = await testVM.hasilPracticeTest();
+    final results = widget.idJadwal != null
+        ? await testVM.hasilRealTest(widget.idJadwal!)
+        : await testVM.hasilPracticeTest();
     if (results == null) {
       messenger.showSnackBar(
         const SnackBar(
@@ -57,9 +60,13 @@ class _PracticeTestResultPageState extends State<PracticeTestResultPage> {
       appBar: AppBar(
         backgroundColor: primaryBlue,
         elevation: 2,
-        title: const Text(
-          "Hasil Practice Test",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        centerTitle: true,
+        title: Text(
+          "Hasil ${widget.idJadwal == null ? "Practice" : ""} Test",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),

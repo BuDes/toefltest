@@ -13,7 +13,7 @@ class TestViewModel extends ChangeNotifier {
 
   List<Jadwal> _unregisteredTests = [];
   List<Jadwal> _registeredTests = [];
-  Map<String, String?>? currentAnswers;
+  Map<String, String?> currentAnswers = {};
 
   List<Jadwal> get registeredTests => _registeredTests;
   List<Jadwal> get unregisteredTests => _unregisteredTests;
@@ -74,7 +74,7 @@ class TestViewModel extends ChangeNotifier {
       );
       if (idJadwal != null) getMyJadwal();
       if (response.statusCode < 300) {
-        currentAnswers = null;
+        currentAnswers = {};
         return null;
       }
       return response.message;
@@ -88,6 +88,23 @@ class TestViewModel extends ChangeNotifier {
     try {
       final response = await ApiService.getRequest(
         "$_riwayatEndpoint/hasil_practice_test",
+      );
+      if (response.statusCode < 300) {
+        final json = response.data as List;
+        final sections = json.map((e) => HasilJawaban.fromJson(e)).toList();
+        return sections;
+      }
+      throw Exception(response.message);
+    } catch (e, stacktrace) {
+      log("Failed to register: $e", stackTrace: stacktrace);
+      return null;
+    }
+  }
+
+  Future<List<HasilJawaban>?> hasilRealTest(String idJadwal) async {
+    try {
+      final response = await ApiService.getRequest(
+        "$_riwayatEndpoint/jadwal_test/$idJadwal",
       );
       if (response.statusCode < 300) {
         final json = response.data as List;

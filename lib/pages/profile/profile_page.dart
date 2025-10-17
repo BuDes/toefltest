@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:toeflapp/models/riwayat.dart';
 import 'package:toeflapp/pages/auth/login_page.dart';
+import 'package:toeflapp/pages/materials/materi_content_page.dart';
+import 'package:toeflapp/widgets/test_result_page.dart';
 import 'package:toeflapp/pages/profile/edit_profile.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/view_models/auth_view_model.dart';
@@ -19,6 +22,28 @@ class ProfilePage extends StatelessWidget {
       ),
       (route) => false,
     );
+  }
+
+  void _handleDetailRiwayat(BuildContext context, Riwayat riwayat) {
+    final navigator = Navigator.of(context);
+    if (riwayat.materi != null) {
+      navigator.push(
+        MaterialPageRoute(
+          builder: (context) => MateriContentPage(materi: riwayat.materi!),
+        ),
+      );
+      return;
+    }
+    if (riwayat.jadwal != null) {
+      navigator.push(
+        MaterialPageRoute(
+          builder: (context) {
+            return TestResultPage(idJadwal: riwayat.jadwal!.id);
+          },
+        ),
+      );
+      return;
+    }
   }
 
   @override
@@ -174,11 +199,7 @@ class ProfilePage extends StatelessWidget {
             ),
           ...List.generate(listRiwayat.length, (index) {
             final riwayat = listRiwayat[index];
-            return _historyCard(
-              riwayat.materi?.nama ?? riwayat.jadwal?.nama ?? "Practice Test",
-              riwayat.tanggal,
-              riwayat.materi != null ? Iconsax.book : Iconsax.task_square,
-            );
+            return _historyCard(context, riwayat);
           }),
 
           // _historyCard("Reading Test 1", "12:00", Iconsax.document_text),
@@ -249,11 +270,18 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _historyCard(String title, String subtitle, IconData icon) {
+  Widget _historyCard(BuildContext context, Riwayat riwayat) {
+    final title =
+        riwayat.materi?.nama ?? riwayat.jadwal?.nama ?? "Practice Test";
+    final subtitle = riwayat.tanggal;
+    final icon = riwayat.materi != null ? Iconsax.book : Iconsax.task_square;
+    final isPractice = riwayat.materi == null && riwayat.jadwal == null;
+
     return Card(
       color: const Color(0xFFE8DFCA), // 🌿 sesuai palet, bukan putih polos
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       // elevation: 2,
+      clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: CircleAvatar(
@@ -268,8 +296,10 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         subtitle: Text(subtitle, style: const TextStyle(color: Colors.black54)),
-        trailing: const Icon(Iconsax.arrow_right_3, color: Colors.black45),
-        onTap: () {}, // TODO: lihat detail
+        trailing: isPractice
+            ? null
+            : const Icon(Iconsax.arrow_right_3, color: Colors.black45),
+        onTap: isPractice ? null : () => _handleDetailRiwayat(context, riwayat),
       ),
     );
   }

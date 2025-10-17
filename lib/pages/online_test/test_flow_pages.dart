@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,8 +9,10 @@ import 'package:toeflapp/models/soal.dart';
 import 'package:toeflapp/models/test_section.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'package:toeflapp/utils/app_constants.dart';
+import 'package:toeflapp/view_models/materi_view_model.dart';
 import 'package:toeflapp/view_models/riwayat_view_model.dart';
 import 'package:toeflapp/view_models/test_view_model.dart';
+import 'package:toeflapp/widgets/test_result_page.dart';
 
 // --- Reusable Widgets (Tidak ada perubahan di sini) ---
 class AppIcon extends StatelessWidget {
@@ -165,8 +168,30 @@ class TestDetailPage extends StatelessWidget {
 
   const TestDetailPage({super.key, required this.jadwal});
 
+  String formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+
+    List<String> parts = [];
+
+    if (hours > 0) {
+      parts.add('$hours hour${hours == 1 ? '' : 's'}');
+    }
+
+    if (minutes > 0 || hours == 0) {
+      parts.add('$minutes minute${minutes == 1 ? '' : 's'}');
+    }
+
+    return parts.join(' ');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final listJenis = context.read<MateriViewModel>().jenis;
+    final durasi = AppConstants.testSectionDuration * listJenis.length;
+    final namaJenis = listJenis.map((e) => e.nama);
+    final formatString = namaJenis.join(", ");
+
     return Scaffold(
       backgroundColor: const Color(0xffF5EFE6),
       appBar: AppBar(
@@ -209,7 +234,7 @@ class TestDetailPage extends StatelessWidget {
                   _buildDetailRow(
                     Iconsax.clock,
                     "Duration",
-                    "2 hours 30 minutes",
+                    formatDuration(durasi),
                   ),
                   _buildDetailRow(
                     Iconsax.calendar_1,
@@ -219,7 +244,7 @@ class TestDetailPage extends StatelessWidget {
                   _buildDetailRow(
                     Iconsax.document,
                     "Format",
-                    "Reading, Listening, Writing, Structure",
+                    formatString,
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -497,6 +522,10 @@ class _TestPageContainerState extends State<TestPageContainer> {
   late Timer _timer;
   int _start = AppConstants.testSectionDuration.inSeconds;
 
+  Map<String, String?> get _selectedAnswers {
+    return context.read<TestViewModel>().currentAnswers;
+  }
+
   // final Map<TestSection, int> _sectionDurations = {
   //   TestSection.reading: 900,
   //   TestSection.listening: 900,
@@ -509,6 +538,12 @@ class _TestPageContainerState extends State<TestPageContainer> {
     super.initState();
     // _start = _sectionDurations[_sections[_currentSectionIndex]] ?? 0;
     _startTimer();
+    final allSoal = widget.sections.fold<List<Soal>>([], (v, e) {
+      return [...v, ...e.soal];
+    });
+    for (var soal in allSoal) {
+      _selectedAnswers[soal.id] = null;
+    }
   }
 
   @override
@@ -683,7 +718,13 @@ class _TestPageContainerState extends State<TestPageContainer> {
     ).then((_) {
       navigator.pop();
       navigator.pop();
-      navigator.pop();
+      navigator.pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => TestResultPage(
+            idJadwal: widget.jadwal.id,
+          ),
+        ),
+      );
     });
   }
 }
@@ -702,7 +743,7 @@ class _CompletionDialogState extends State<_CompletionDialog> {
   void _submitAnswers() async {
     final testVM = context.read<TestViewModel>();
     final riwayatVM = context.read<RiwayatViewModel>();
-    final answers = testVM.currentAnswers!;
+    final answers = testVM.currentAnswers;
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     final error = await testVM.submitAnswers(
@@ -778,7 +819,7 @@ class _CompletionDialogState extends State<_CompletionDialog> {
             Navigator.of(context).pop();
           },
           child: const Text(
-            "Kembali ke Daftar Test",
+            "Lihat hasil test",
             style: TextStyle(
               color: AppColors.accent,
               fontWeight: FontWeight.bold,
@@ -812,20 +853,16 @@ class TestSectionWidget extends StatefulWidget {
 }
 
 class _TestSectionWidgetState extends State<TestSectionWidget> {
-  final Map<String, String?> _selectedAnswers = {};
-
   // bool _isPlaying = false;
   // Timer? _audioTimer;
   // final Duration _audioDuration = const Duration(minutes: 2, seconds: 40);
   // Duration _audioPosition = Duration.zero;
 
-  @override
-  void initState() {
-    super.initState();
-    for (var soal in widget.section.soal) {
-      _selectedAnswers[soal.id] = null;
-    }
+  Map<String, String?> get _selectedAnswers {
+    return context.read<TestViewModel>().currentAnswers;
   }
+
+  List<Soal> get _questions => widget.section.soal;
 
   @override
   void dispose() {
@@ -867,7 +904,6 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<TestViewModel>().currentAnswers = _selectedAnswers;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -886,16 +922,19 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
   }
 
   Widget _buildTestSection() {
-    final readingQuestions = widget.section.soal;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // _buildPassageCard(),
         const SizedBox(height: 24),
-        ...readingQuestions.asMap().entries.map((entry) {
-          int index = entry.key;
-          Soal question = entry.value;
-          return _buildQuestionCard(question, index + 1);
+        ...List.generate(_questions.length, (index) {
+          final question = _questions[index];
+          return Column(
+            children: [
+              if (question.attachment != null) _buildAttachment(index),
+              _buildQuestionCard(question, index + 1),
+            ],
+          );
         }),
       ],
     );
@@ -917,42 +956,41 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
   //   );
   // }
 
-  // TODO: passage from attachment
-  Widget _buildPassageCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xffE8DFCA), width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Passage:",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: AppColors.primary,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            "The rapid advancement of technology has profoundly impacted our daily lives, transforming how we communicate, work, and access information. From the proliferation of smartphones to the rise of artificial intelligence, these innovations have created new opportunities and challenges. However, as we embrace these changes, it's crucial to consider their social and environmental implications, particularly in areas like data privacy and sustainability.",
-            style: TextStyle(fontSize: 14, color: Colors.black87),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildPassageCard() {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(20),
+  //       border: Border.all(color: const Color(0xffE8DFCA), width: 2),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withOpacity(0.05),
+  //           blurRadius: 8,
+  //           offset: const Offset(0, 4),
+  //         ),
+  //       ],
+  //     ),
+  //     child: const Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           "Passage:",
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.bold,
+  //             fontSize: 16,
+  //             color: AppColors.primary,
+  //           ),
+  //         ),
+  //         SizedBox(height: 8),
+  //         Text(
+  //           "The rapid advancement of technology has profoundly impacted our daily lives, transforming how we communicate, work, and access information. From the proliferation of smartphones to the rise of artificial intelligence, these innovations have created new opportunities and challenges. However, as we embrace these changes, it's crucial to consider their social and environmental implications, particularly in areas like data privacy and sustainability.",
+  //           style: TextStyle(fontSize: 14, color: Colors.black87),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // Widget _buildListeningSection() {
   //   final listeningQuestions = MockData.questions[TestSection.listening]!;
@@ -1049,15 +1087,27 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
   //   );
   // }
 
+  Widget _buildAttachment(int index) {
+    final attachment = _questions[index].attachment!;
+    if (index != 0) {
+      final prevAttachment = _questions[index - 1].attachment;
+      if (prevAttachment?.id == attachment.id) {
+        return const SizedBox();
+      }
+    }
+
+    if (attachment.audioFile != null) {
+      return _QuestionContainer(
+        child: _AttachmentAudioPlayer(attachment: attachment),
+      );
+    }
+    return _QuestionContainer(
+      child: Text(attachment.passage ?? ""),
+    );
+  }
+
   Widget _buildQuestionCard(Soal question, int number) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xffE8DFCA).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xffCBDCEB)),
-      ),
+    return _QuestionContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1145,6 +1195,110 @@ class _TestSectionWidgetState extends State<TestSectionWidget> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AttachmentAudioPlayer extends StatefulWidget {
+  const _AttachmentAudioPlayer({required this.attachment});
+  final Attachment attachment;
+
+  @override
+  State<_AttachmentAudioPlayer> createState() => _AttachmentAudioPlayerState();
+}
+
+class _AttachmentAudioPlayerState extends State<_AttachmentAudioPlayer> {
+  final _player = AudioPlayer();
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+
+  bool get _isPlayingAudio => _player.state == PlayerState.playing;
+
+  void _pausePlay() async {
+    if (_isPlayingAudio) {
+      _player.pause();
+    } else {
+      _player.resume();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _player.setReleaseMode(ReleaseMode.stop);
+    _player.setSourceUrl(widget.attachment.audioFile!);
+
+    // When playback completes
+    _player.onPlayerComplete.listen((event) async {
+      await Future.delayed(const Duration(milliseconds: 300));
+      await _player.seek(Duration.zero);
+    });
+
+    // Listen for duration changes
+    _player.onDurationChanged.listen((Duration d) {
+      setState(() => _duration = d);
+    });
+
+    // Listen for audio position changes
+    _player.onPositionChanged.listen((Duration p) {
+      setState(() => _position = p);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _player.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            _isPlayingAudio ? Icons.pause_circle : Icons.play_circle,
+            size: 36,
+            color: primaryBlue,
+          ),
+          onPressed: _pausePlay,
+        ),
+        Expanded(
+          child: Slider(
+            min: 0,
+            max: _duration.inSeconds.toDouble(),
+            value: _position.inSeconds.toDouble().clamp(
+              0,
+              _duration.inSeconds.toDouble(),
+            ),
+            onChanged: (value) async {
+              final position = Duration(seconds: value.toInt());
+              await _player.seek(position);
+            },
+            activeColor: primaryBlue,
+            inactiveColor: Colors.grey.shade300,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuestionContainer extends StatelessWidget {
+  const _QuestionContainer({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xffE8DFCA).withOpacity(0.3),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xffCBDCEB)),
+      ),
+      child: child,
     );
   }
 }

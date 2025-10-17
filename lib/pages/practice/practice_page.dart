@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:toeflapp/pages/practice/practice_result_page.dart';
+import 'package:toeflapp/widgets/test_result_page.dart';
 import 'package:toeflapp/theme/app_colors.dart';
 import 'practices_detail_page.dart'; // halaman simulasi test
 
@@ -75,7 +75,7 @@ class PracticeTestPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const PracticeTestResultPage(),
+                        builder: (_) => const TestResultPage(),
                       ),
                     );
                   },
